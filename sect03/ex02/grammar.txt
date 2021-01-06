@@ -1,0 +1,70 @@
+P    -> S $
+Sl   -> S Slp
+Slp  -> S Slp | EPSILON
+S    -> ( Sp )
+Sp   -> = ID Ex | cond B S El | while B S | do Sl | print Exl | read ID
+El   -> ( else S ) | EPSILON
+B    -> ( Bp )
+Bp   -> RELOP Ex Ex
+Ex   -> NUM | ID | ( Exp )
+Exp  -> + Exl | - Ex Ex | * Exl | / Ex Ex
+Exl  -> Ex Exlp
+Exlp -> Ex Exlp | EPSILON
+
+----
+
+FIRST(P)    = { ( }
+FIRST(Sl)   = { ( }
+FIRST(Slp)  = { EPSILON, ( }
+FIRST(S)    = { ( }
+FIRST(Sp)   = { =, cond, while, do, print, read }
+FIRST(El)   = { (, EPSILON }
+FIRST(B)    = { ( }
+FIRST(Bp)   = { RELOP }
+FIRST(Ex)   = { NUM, ID, ( }
+FIRST(Exp)  = { +, -, *, / }
+FIRST(Exl)  = { NUM, ID, ( }
+FIRST(Exlp) = { EPSILON, NUM, ID, ( }
+
+----
+
+FOLLOW(P)    = { $ }
+FOLLOW(Sl)   = { ) }
+FOLLOW(Slp)  = { ) }
+FOLLOW(S)    = { ), (, EPSILON, $ }
+FOLLOW(Sp)   = { ) }
+FOLLOW(El)   = { ) }
+FOLLOW(B)    = { ( }
+FOLLOW(Bp)   = { ) }
+FOLLOW(Ex)   = { EPSILON, NUM, ID, (, ) }
+FOLLOW(Exp)  = { ) }
+FOLLOW(Exl)  = { ) }
+FOLLOW(Exlp) = { ) }
+
+----
+
+PREDICT(P    -> S)           = { ( }
+PREDICT(Sl   -> S Slp)       = { ( }
+PREDICT(Slp  -> S Slp)       = { ( }
+PREDICT(Slp  -> EPSILON)     = { EPSILON }
+PREDICT(S    -> ( Sp ))      = { ( }
+PREDICT(Sp   -> = ID Ex)     = { = }
+PREDICT(Sp   -> cond B S El) = { cond }
+PREDICT(Sp   -> while B S)   = { while }
+PREDICT(Sp   -> do Sl)       = { do }
+PREDICT(Sp   -> print Exl)   = { print }
+PREDICT(Sp   -> read ID)     = { read }
+PREDICT(El   -> ( else S ))  = { ( }
+PREDICT(El   -> EPSILON)     = { EPSILON }
+PREDICT(B    -> ( Bp ))      = { ( }
+PREDICT(Bp   -> RELOP Ex Ex) = { RELOP }
+PREDICT(Ex   -> NUM)         = { NUM }
+PREDICT(Ex   -> ID)          = { ID }
+PREDICT(Ex   -> ( Exp ))     = { ( }
+PREDICT(Exp  -> + Exl)       = { + }
+PREDICT(Exp  -> - Ex Ex)     = { - }
+PREDICT(Exp  -> * Exl)       = { * }
+PREDICT(Exp  -> / Ex Ex)     = { / }
+PREDICT(Exl  -> Ex Exlp)     = { NUM, ID, ( }
+PREDICT(Exlp -> Ex Exlp)     = { NUM, ID, ( }
+PREDICT(Exlp -> EPSILON)     = { EPSILON }
