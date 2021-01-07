@@ -13,7 +13,6 @@ clean:
 	@$(SO_ENV) $(FIND) . -name '*.class' -exec $(SO_ENV) $(RM) {} \;
 	@$(SO_ENV) $(ECHO) "Class files cleaned!"
 
-
 # --------------------------
 # Exercises class file
 ex01: ex01/NoTreZeri.class
@@ -28,7 +27,6 @@ ex09: ex09/MioNome.class
 ex10: ex10/Commenti.class
 ex11: ex11/CommentiReverse.class
 
-
 # --------------------------
 # Run given exercise
 ex*: SPLITEX = $(subst /, , $(firstword $(subst ., , $<)))
@@ -36,7 +34,6 @@ ex*: NUMEX = $(word 2, $(subst x, , $(firstword $(SPLITEX))))
 ex*:
 	@$(SO_ENV) $(ECHO) "Running exercise $(NUMEX)..."
 	@$(SO_ENV) $(JAVA) -cp ./$(firstword $(SPLITEX)) $(word 2, $(SPLITEX))
-
 
 # --------------------------
 # Compile given exercise
