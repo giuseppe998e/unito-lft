@@ -44,7 +44,7 @@ public class Parser {
   private void statp() {
     switch(token.getTag()) {
       case Tag.ASN:
-        match(Token.ASN.getTag());
+        match(Tag.ASN);
         match(Tag.ID);
         expr();
         break;
@@ -122,20 +122,20 @@ public class Parser {
   private void exprp() {
     switch(token.getTag()) {
       case Tag.PLS: // +
-        match(Token.PLS.getTag());
+        match(Tag.PLS);
         exprlist();
         break;
       case Tag.MIN: // -
-        match(Token.MIN.getTag());
+        match(Tag.MIN);
         expr();
         expr();
         break;
       case Tag.MUL: // *
-        match(Token.MUL.getTag());
+        match(Tag.MUL);
         exprlist();
         break;
       case Tag.DIV: // /
-        match(Token.DIV.getTag());
+        match(Tag.DIV);
         expr();
         expr();
         break;
