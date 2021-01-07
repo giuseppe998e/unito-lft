@@ -22,14 +22,18 @@ public class Parser {
     if(token.getTag() == Tag.NUM || token.getTag() == Tag.LPT) {
       expr();
       match(Tag.EOF);
-    } else error("start error");
+    } else {
+      error("start() error");
+    }
   }
 
   private void expr() {
     if(token.getTag() == Tag.NUM || token.getTag() == Tag.LPT) {
       term();
       exprp();
-    } else error("expr error");
+    } else {
+      error("expr() error");
+    }
   }
 
   private void exprp() {
@@ -48,7 +52,7 @@ public class Parser {
       case Tag.RPT:
         break;
       default:
-        error("exprp error");
+        error("exprp() error");
     }
   }
 
@@ -56,7 +60,9 @@ public class Parser {
     if(token.getTag() == Tag.NUM || token.getTag() == '(') {
       fact();
       termp();
-    } else error("term error");
+    } else {
+      error("term() error");
+    }
   }
 
   private void termp() {
@@ -77,18 +83,20 @@ public class Parser {
       case Tag.EOF:
         break;
       default:
-        error("termp error");
+        error("termp() error");
     }
   }
   
   private void fact() {
-    if (token.getTag() == Tag.LPT) {
+    if (token.getTag() == Tag.NUM) {
+      match(Tag.NUM);
+    } else if (token.getTag() == Tag.LPT) {
       match(Tag.LPT);
       expr();
       match(Tag.RPT);
-    } else if (token.getTag() == Tag.NUM) {
-      match(Tag.NUM);
-    } else error("fact error: number or '(' expected");
+    } else {
+      error("fact() error: number or '(' expected");
+    }
   }
 
   private void move() {
