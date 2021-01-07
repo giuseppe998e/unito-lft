@@ -182,11 +182,11 @@ public class Parser {
 
   private void move() {
     token = lexer.scan(bReader);
-    System.out.println("token = " + token);
+    // System.out.println("token = " + token);
   }
 
   private void error(String s) {
-    throw new RuntimeException("near line " + lexer.getLine() + ": " + s);
+    throw new RuntimeException("Near line " + lexer.getLine() + ": " + s);
   }
 
   // -------------------------------------
@@ -200,7 +200,7 @@ public class Parser {
       Parser parser = new Parser(lexer, bReader);
       parser.prog();
 
-      System.out.println("Input OK");
+      System.out.println("Input: OK");
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
