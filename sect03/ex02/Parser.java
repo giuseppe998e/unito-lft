@@ -8,8 +8,8 @@ import lexer.component.Tag;
 import lexer.component.Token;
 
 public class Parser {
-  private BufferedReader bReader;
-  private Lexer lexer;
+  private final BufferedReader bReader;
+  private final Lexer lexer;
   private Token token;
 
   public Parser(Lexer lexer, BufferedReader bReader) {
