@@ -2,13 +2,13 @@ import java.util.Scanner;
 import java.lang.Character;
 
 public class MioNome {
-	public static void main(String[] args) {
+  public static void main(String[] args) {
     Scanner keyboard = new Scanner(System.in);
 
-		System.out.print("Please enter a string: ");
-		String inputStr = keyboard.nextLine();
+    System.out.print("Please enter a string: ");
+    String inputStr = keyboard.nextLine();
     keyboard.close();
-		
+    
     System.out.println("Is input correct? " + (scan(inputStr) ? "YES" : "NOPE"));
     System.out.println("");
   }

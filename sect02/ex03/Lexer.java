@@ -210,12 +210,12 @@ public class Lexer {
     }
   }
 
-	// -------------------------------------
-	// Application Main
-	public static void main(String[] args) {
-		Lexer lexer = new Lexer();
+  // -------------------------------------
+  // Application Main
+  public static void main(String[] args) {
+    Lexer lexer = new Lexer();
 
-		try (FileReader fReader = new FileReader(args[0]);
+    try (FileReader fReader = new FileReader(args[0]);
           BufferedReader bReader = new BufferedReader(fReader)) {
       
       Token token = null;
@@ -226,5 +226,5 @@ public class Lexer {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-	}
+  }
 }

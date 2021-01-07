@@ -9,7 +9,7 @@ import lexer.component.Token;
 import lexer.component.Number;
 
 class Evaluator {
-	private final BufferedReader bReader;
+  private final BufferedReader bReader;
   private final Lexer lexer;
   private Token token;
 
@@ -143,7 +143,7 @@ class Evaluator {
   }
 
   // -------------------------------------
-	// Application Main
+  // Application Main
   public static void main(String[] args) {
     Lexer lexer = new Lexer();
 

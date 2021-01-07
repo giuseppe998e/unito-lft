@@ -1,15 +1,15 @@
 // (cond(== X (+ 1 3)) (= X (- 4 (* 3 2))) (else (= X (+ 4 2))))
 (
-	cond(
-		== X (+ 1 3)
-	)
-	(
-		= X (- 4 (* 3 2))
-	)
-	(
-		else (
-			= X (+ 4 2)
-		) /* TEST COMMENT
-		     MULTI * LINE */
-	)
+  cond(
+    == X (+ 1 3)
+  )
+  (
+    = X (- 4 (* 3 2))
+  )
+  (
+    else (
+      = X (+ 4 2)
+    ) /* TEST COMMENT
+         MULTI * LINE */
+  )
 )

@@ -190,7 +190,7 @@ public class Parser {
   }
 
   // -------------------------------------
-	// Application Main
+  // Application Main
   public static void main(String[] args) {
     Lexer lexer = new Lexer();
 
