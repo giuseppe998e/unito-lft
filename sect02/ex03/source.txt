@@ -1,4 +1,5 @@
-/* calcolare la velocita‘ */
+/* calcolare la velocita */
+*/ // <-- Illegal but oK
 (= d 300) // distanza
 (= t 10) // tempo
 _cia9so = 1 /* CIAO CIAO CIAO *//*OK*/

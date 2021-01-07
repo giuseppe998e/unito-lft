@@ -1,13 +1,15 @@
+package lexer;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.RuntimeException;
 
-import component.Tag;
-import component.Token;
-import component.Identifier;
-import component.Number;
+import lexer.component.Tag;
+import lexer.component.Token;
+import lexer.component.Identifier;
+import lexer.component.Number;
 
 public class Lexer {
   private int line;
@@ -19,9 +21,40 @@ public class Lexer {
   }
 
   public Token scan(BufferedReader br) {
-    // Spaces
-    while (Character.isWhitespace(peek)) {
+    // Spaces, Tag.DIV Token and Comments (Single line or Multi line)
+    while (Character.isWhitespace(peek) || peek == Tag.DIV) {
       if (peek == '\n') line += 1;
+
+      //  Tag.DIV Token and Comments (Single line or Multi line)
+      if (peek == Tag.DIV) {
+        readChar(br);
+        
+        if (peek == Tag.MUL) {
+          int state = 0;
+          while (state < 2 && peek != (char) Tag.EOF) {
+            readChar(br);
+            switch(state) {
+              case 0:
+                if (peek == Tag.MUL) state = 1;
+                break;
+              case 1:
+                if (peek == Tag.DIV) state = 2;
+                else state = 0;
+            }
+          }
+
+          if (state < 2) {
+            throw new RuntimeException("Comment area not closed");
+          }
+
+          peek = ' ';
+        } else if (peek == Tag.DIV) {
+          while(peek != '\n') readChar(br);
+        } else {
+          return Token.DIV;
+        }
+      }
+
       readChar(br);
     }
 
@@ -51,9 +84,9 @@ public class Lexer {
       case Tag.MUL:
         peek = ' ';
         return Token.MUL;
-      case Tag.DIV:
-        peek = ' ';
-        return Token.DIV;
+//    case Tag.DIV:
+//      peek = ' ';
+//      return Token.DIV;
       case Tag.SCL:
         peek = ' ';
         return Token.SCL;
@@ -71,29 +104,29 @@ public class Lexer {
       case '=':
         readChar(br);
         if (peek == '=') {
-          peek = ' ';
-          return Token.EQ;
+            peek = ' ';
+            return Token.EQ;
         } else {
-          return Token.ASN;
+            return Token.ASN;
         }
       case '<':
         readChar(br);
         if (peek == '=') {
-          peek = ' ';
-          return Token.LE;
+            peek = ' ';
+            return Token.LE;
         } else if (peek == '>') {
-          peek = ' ';
-          return Token.NE;
+            peek = ' ';
+            return Token.NE;
         } else {
-          return Token.LT;
+            return Token.LT;
         }
       case '>':
         readChar(br);
         if (peek == '=') {
-          peek = ' ';
-          return Token.GE;
+            peek = ' ';
+            return Token.GE;
         } else {
-          return Token.GT;
+            return Token.GT;
         }
       case '&':
         readChar(br);
@@ -172,7 +205,6 @@ public class Lexer {
     return line;
   }
 
-
   private void readChar(BufferedReader br) {
     try {
       peek = (char) br.read();
@@ -180,22 +212,4 @@ public class Lexer {
       peek = (char) Tag.EOF;
     }
   }
-
-	// -------------------------------------
-	// Application Main
-	public static void main(String[] args) {
-		Lexer lexer = new Lexer();
-
-		try (FileReader fReader = new FileReader(args[0]);
-          BufferedReader bReader = new BufferedReader(fReader)) {
-      
-      Token token = null;
-      do {
-        token = lexer.scan(bReader);
-        System.out.println("token = " + token);
-      } while (token.getTag() != Tag.EOF);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-	}
 }

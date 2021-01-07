@@ -3,14 +3,18 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.RuntimeException;
 
+import lexer.Lexer;
+import lexer.component.Tag;
+import lexer.component.Token;
+
 public class Parser {
+  private BufferedReader bReader;
   private Lexer lexer;
-  private BufferedReader reader;
   private Token token;
 
-  public Parser(Lexer lexer, BufferedReader reader) {
+  public Parser(Lexer lexer, BufferedReader bReader) {
     this.lexer = lexer;
-    this.reader = reader;
+    this.bReader = bReader;
     move();
   }
 
@@ -88,7 +92,7 @@ public class Parser {
   }
 
   private void move() {
-    token = lexer.scan(reader);
+    token = lexer.scan(bReader);
     System.out.println("token = " + token);
   }
   
@@ -102,18 +106,17 @@ public class Parser {
     } else error("syntax error, '" + t + "' expected");
   }
 
-  // --------------------------------------------
-  // Main static method
-
+  // -------------------------------------
+	// Application Main
   public static void main(String[] args) {
     Lexer lexer = new Lexer();
 
-    try {
-      BufferedReader reader = new BufferedReader(new FileReader(args[0]));
-      Parser parser = new Parser(lexer, reader);
-      
+    try (FileReader fReader = new FileReader(args[0]);
+          BufferedReader bReader = new BufferedReader(fReader)) {
+     
+      Parser parser = new Parser(lexer, bReader);
       parser.start();
-      reader.close();
+
       System.out.println("Input OK");
     } catch (IOException e) {
       throw new RuntimeException(e);

@@ -4,6 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.RuntimeException;
 
+import component.Tag;
+import component.Token;
+import component.Identifier;
+import component.Number;
+
 public class Lexer {
   private int line;
   private char peek;
@@ -13,170 +18,167 @@ public class Lexer {
     peek = ' ';
   }
 
-  public Token lexicalScan(BufferedReader br) {
-    skipSpaces(br);
+  public Token scan(BufferedReader br) {
+    // Spaces
+    while (Character.isWhitespace(peek)) {
+      if (peek == '\n') line += 1;
+      readChar(br);
+    }
 
+    // Single Char Tokens
     switch (peek) {
-      case '!':
+      case Tag.NOT:
         peek = ' ';
         return Token.NOT;
-      case '(':
+      case Tag.LPT:
         peek = ' ';
         return Token.LPT;
-      case ')':
+      case Tag.RPT:
         peek = ' ';
         return Token.RPT;
-      case '{':
+      case Tag.LPG:
         peek = ' ';
         return Token.LPG;
-      case '}':
+      case Tag.RPG:
         peek = ' ';
         return Token.RPG;
-      case '+':
+      case Tag.PLS:
         peek = ' ';
         return Token.PLS;
-      case '-':
+      case Tag.MIN:
         peek = ' ';
         return Token.MIN;
-      case '*':
+      case Tag.MUL:
         peek = ' ';
         return Token.MUL;
-      case '/':
+      case Tag.DIV:
         peek = ' ';
         return Token.DIV;
-      case ';':
+      case Tag.SCL:
         peek = ' ';
         return Token.SCL;
+      case (char)Tag.EOF:
+        return Token.EOF;
+    // Double Char Tokens
       case '|':
-        readCh(br);
+        readChar(br);
         if (peek == '|') {
-            peek = ' ';
-            return Word.OR;
+          peek = ' ';
+          return Token.OR;
         } else {
-            System.err.println("Erroneous character after | : "  + peek );
-            return null;
+          throw new RuntimeException("Erroneous character after | : "  + peek );
         }
       case '=':
-        readCh(br);
+        readChar(br);
         if (peek == '=') {
-            peek = ' ';
-            return Word.EQ;
+          peek = ' ';
+          return Token.EQ;
         } else {
-            return Token.ASN;
+          return Token.ASN;
         }
       case '<':
-        readCh(br);
+        readChar(br);
         if (peek == '=') {
-            peek = ' ';
-            return Word.LE;
+          peek = ' ';
+          return Token.LE;
         } else if (peek == '>') {
-            peek = ' ';
-            return Word.NE;
+          peek = ' ';
+          return Token.NE;
         } else {
-            return Word.LT;
+          return Token.LT;
         }
       case '>':
-        readCh(br);
+        readChar(br);
         if (peek == '=') {
-            peek = ' ';
-            return Word.GE;
+          peek = ' ';
+          return Token.GE;
         } else {
-            return Word.GT;
+          return Token.GT;
         }
       case '&':
-        readCh(br);
+        readChar(br);
         if (peek == '&') {
-          return Word.AND;
+          return Token.AND;
         } else {
-          System.err.println("Erroneous character after & : "  + peek );
-          return null;
+          throw new RuntimeException("Erroneous character after & : "  + peek );
         }
-      case (char) -1:
-        return Token.EOF;
     }
 
-    // Words, Numbers and Identifiers
+    // Word Tokens OR Identifiers
     if (Character.isLetter(peek)) {
-      String lect = "" + peek;
+      String lexeme = "";
+      do {
+        lexeme += peek;
+        readChar(br);
+      } while (Character.isLetter(peek));
 
-      readCh(br);
-      while (Character.isLetter(peek)) {
-        lect += peek;
-        readCh(br);
-      }
-    
-      switch(lect.toLowerCase()) {
+      switch(lexeme.toLowerCase()) {
         case "cond":
-          return Word.COND;
+          return Token.COND;
         case "then":
-          return Word.THEN;
+          return Token.THEN;
         case "when":
-          return Word.WHEN;
+          return Token.WHEN;
         case "else":
-          return Word.ELSE;
+          return Token.ELSE;
         case "while":
-          return Word.WHILE;
+          return Token.WHILE;
         case "do":
-          return Word.DO;
+          return Token.DO;
         case "seq":
-          return Word.SEQ;
+          return Token.SEQ;
         case "print":
-          return Word.PRINT;
+          return Token.PRINT;
         case "read":
-          return Word.READ;
+          return Token.READ;
       }
-
-      return new Word(Tag.ID, lect);
-    } 
-    
-    if (Character.isDigit(peek)) {
-      String numb = "" + peek;
-
-      readCh(br);
-      while (Character.isDigit(peek)) {
-        numb += peek;
-        readCh(br);
-      }
-
-      return new Number(Tag.NUM, numb);
-    }
       
-    System.err.println("Erroneous character: " + peek);
-    return null;
-  }
-
-  private void skipSpaces(BufferedReader br) {
-    while (Character.isWhitespace(peek)) {
-      readCh(br);
+      return new Identifier(lexeme);
     }
+
+    // (Non-Negative) Numbers
+    if (Character.isDigit(peek)) {
+      String number = "";
+      do {
+        number += peek;
+        readChar(br);
+      } while (Character.isDigit(peek));
+
+      return new Number(Integer.parseInt(number));
+    }
+
+    // Illegal character
+    throw new RuntimeException("Erroneous character: " + peek);
   }
 
-  private void readCh(BufferedReader br) {
+  public int getLine() {
+    return line;
+  }
+
+
+  private void readChar(BufferedReader br) {
     try {
       peek = (char) br.read();
-    } catch (IOException exc) {
-      peek = (char) -1; // ERROR
+    } catch (IOException ignored) { 
+      peek = (char) Tag.EOF;
     }
   }
 
-  // --------------------------------------------
-  // Main static method
+	// -------------------------------------
+	// Application Main
+	public static void main(String[] args) {
+		Lexer lexer = new Lexer();
 
-  public static void main(String[] args) {
-    Lexer lex = new Lexer();
-
-    try {
-      BufferedReader br = new BufferedReader(new FileReader(args[0]));
-      Token tok;
-
+		try (FileReader fReader = new FileReader(args[0]);
+          BufferedReader bReader = new BufferedReader(fReader)) {
+      
+      Token token = null;
       do {
-        tok = lex.lexicalScan(br);
-        System.out.println("Scan: " + tok);
-      } while (tok.tag != Tag.EOF);
-
-      br.close();
+        token = lexer.scan(bReader);
+        System.out.println("token = " + token);
+      } while (token.getTag() != Tag.EOF);
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-  }
+	}
 }
