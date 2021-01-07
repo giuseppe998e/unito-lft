@@ -3,7 +3,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.RuntimeException;
 
-// TODO
 public class Parser {
   private Lexer lexer;
   private BufferedReader reader;
@@ -114,8 +113,8 @@ public class Parser {
       Parser parser = new Parser(lexer, reader);
       
       parser.start();
-      System.out.println("Input OK");
       reader.close();
+      System.out.println("Input OK");
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

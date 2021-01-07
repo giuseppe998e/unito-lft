@@ -75,8 +75,13 @@ public class Parser {
   private void elseopt() {
     if (token.getTag() == Tag.LPT) {
       match(Tag.LPT);
-      stat();
-      match(Tag.RPT);
+      if (token.getTag() == Tag.ELSE) {
+        match(Tag.ELSE);
+        stat();
+        match(Tag.RPT);
+      } else {
+        error("elseopt() error");
+      }
     } // else EPSILON
   }
 
@@ -136,12 +141,31 @@ public class Parser {
   }
 
   private void exprlist() {
-    expr();
-    exprlistp();
+    switch(token.getTag()) {
+      case Tag.NUM:
+      case Tag.ID:
+      case Tag.LPT:
+        expr();
+        exprlistp();
+        break;
+      default:
+        error("exprlist() error");
+    }
   }
 
   private void exprlistp() {
-    
+    switch(token.getTag()) {
+      case Tag.NUM:
+      case Tag.ID:
+      case Tag.LPT:
+        expr();
+        exprlistp();
+        break;
+      default:
+        if (token.getTag() != Tag.RPT) {
+          error("exprlistp() error");
+        }
+    }
   }
 
   private void move() {
@@ -152,7 +176,7 @@ public class Parser {
   private void match(int t) {
     if (token.getTag() == t) {
       if (token.getTag() != Tag.EOF) move();
-    } else error("syntax error, '" + t + "' expected");
+    } else error("syntax error, '" + t + "' expected, '" + token.getTag() + "' found");
   }
 
   private void error(String s) {
@@ -170,8 +194,8 @@ public class Parser {
       Parser parser = new Parser(lexer, reader);
       
       parser.prog();
-      System.out.println("Input OK");
       reader.close();
+      System.out.println("Input OK");
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
