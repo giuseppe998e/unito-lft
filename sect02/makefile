@@ -3,7 +3,7 @@ JAVAC  = javac
 JAVA   = java
 FIND   = find
 ECHO   = echo
-RM     = rm
+RM     = rm -f
 
 .PHONY: clean ex*
 
