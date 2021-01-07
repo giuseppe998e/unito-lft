@@ -95,7 +95,7 @@ public class Parser {
       expr();
       match(Tag.RPT);
     } else {
-      error("fact() error: number or '(' expected");
+      error("fact() error: number or '(' expected, '" + token.getTag() + "' found");
     }
   }
 
@@ -111,7 +111,9 @@ public class Parser {
   private void match(int t) {
     if (token.getTag() == t) {
       if (token.getTag() != Tag.EOF) move();
-    } else error("syntax error, '" + t + "' expected");
+    } else {
+      error("Syntax error: '" + t + "' expected, '" + token.getTag() + "' found");
+    }
   }
 
   // -------------------------------------

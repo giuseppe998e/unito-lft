@@ -175,7 +175,9 @@ public class Parser {
   private void match(int t) {
     if (token.getTag() == t) {
       if (token.getTag() != Tag.EOF) move();
-    } else error("syntax error, '" + t + "' expected, '" + token.getTag() + "' found");
+    } else {
+      error("Syntax error: '" + t + "' expected, '" + token.getTag() + "' found");
+    }
   }
 
   private void move() {
