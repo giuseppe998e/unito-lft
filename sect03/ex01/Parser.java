@@ -16,7 +16,7 @@ public class Parser {
   }
 
   public void start() {
-    if(token.getTag() == Tag.NUM || token.getTag() == TAG.LPT) {
+    if(token.getTag() == Tag.NUM || token.getTag() == Tag.LPT) {
       expr();
       match(Tag.EOF);
     } else error("start error");
@@ -58,8 +58,8 @@ public class Parser {
 
   private void termp() {
     switch(token.getTag()) {
-      case TAG.MUL:
-        match(TAG.MUL);
+      case Tag.MUL:
+        match(Tag.MUL);
         fact();
         termp();
         break;
@@ -68,8 +68,8 @@ public class Parser {
         fact();
         termp();
         break;
-      case TAG.PLS:
-      case TAG.MIN:
+      case Tag.PLS:
+      case Tag.MIN:
       case Tag.RPT:
       case Tag.EOF:
         break;
