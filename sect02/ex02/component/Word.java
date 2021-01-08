@@ -1,19 +1,19 @@
 package component;
 
 public class Word extends Token {
-  protected final String value;
+  protected final String lexeme;
 
-  public Word (String value, int tag) {
+  public Word (String lexeme, int tag) {
     super(tag);
-    this.value = value;
+    this.lexeme = lexeme;
   }
 
-  public String getValue() {
-    return value;
+  public String getLexeme() {
+    return lexeme;
   }
 
   public String toString() {
-    String string = String.format("{tag: %3d, value: '%s'}", tag, value);
+    String string = String.format("{tag: %3d, lexeme: '%s'}", tag, lexeme);
     return string; 
   }
 }

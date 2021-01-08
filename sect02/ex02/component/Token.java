@@ -12,33 +12,32 @@ public class Token {
   }
 
   public String toString() {
-    String string = String.format("{tag: %3d, value: '%c'}", tag, (char)tag);
+    String string = String.format("{tag: %3d, char: '%c'}", tag, (char)tag);
     return string; 
   }
 
   // -------------------------------------------------------
   // STATIC TOKENS          // Single Char Tokens
-  public static final Token NOT   = new Token(Tag.NOT),
-                            LPT   = new Token(Tag.LPT),
-                            RPT   = new Token(Tag.RPT),
-                            LPG   = new Token(Tag.LPG),
-                            RPG   = new Token(Tag.RPG),
-                            PLS   = new Token(Tag.PLS),
-                            MIN   = new Token(Tag.MIN),
-                            MUL   = new Token(Tag.MUL),
-                            DIV   = new Token(Tag.DIV),
-                            ASN   = new Token(Tag.ASN),
-                            SCL   = new Token(Tag.SCL),
-                            LT    = new Word("<",   Tag.RELOP),
-                            GT    = new Word(">",   Tag.RELOP),
-                            EOF   = new Word("EOF", Tag.EOF),
+  public static final Token NOT = new Token(Tag.NOT), // !
+                            LPT = new Token(Tag.LPT), // (
+                            RPT = new Token(Tag.RPT), // )
+                            LPG = new Token(Tag.LPG), // {
+                            RPG = new Token(Tag.RPG), // }
+                            PLS = new Token(Tag.PLS), // +
+                            MIN = new Token(Tag.MIN), // -
+                            MUL = new Token(Tag.MUL), // *
+                            DIV = new Token(Tag.DIV), // /
+                            ASN = new Token(Tag.ASN), // =
+                            SCL = new Token(Tag.SCL), // ;
+                            LT  = new Word("<", Tag.RELOP),
+                            GT  = new Word(">", Tag.RELOP),
                             // Double Char Tokens
-                            EQ    = new Word("==", Tag.RELOP),
-                            LE    = new Word("<=", Tag.RELOP),
-                            NE    = new Word("<>", Tag.RELOP),
-                            GE    = new Word(">=", Tag.RELOP),
-                            OR    = new Word("||", Tag.OR),
-                            AND   = new Word("&&", Tag.AND),
+                            EQ  = new Word("==", Tag.RELOP),
+                            LE  = new Word("<=", Tag.RELOP),
+                            NE  = new Word("<>", Tag.RELOP),
+                            GE  = new Word(">=", Tag.RELOP),
+                            OR  = new Word("||", Tag.OR),
+                            AND = new Word("&&", Tag.AND),
                             // Word Tokens
                             COND  = new Word("cond",  Tag.COND),
                             WHEN  = new Word("when",  Tag.WHEN),
@@ -48,5 +47,7 @@ public class Token {
                             DO    = new Word("do",    Tag.DO),
                             SEQ   = new Word("seq",   Tag.SEQ),
                             PRINT = new Word("print", Tag.PRINT),
-                            READ  = new Word("read",  Tag.READ);
+                            READ  = new Word("read",  Tag.READ),
+                            // End of file
+                            EOF = new Word("EOF", Tag.EOF);
 }
