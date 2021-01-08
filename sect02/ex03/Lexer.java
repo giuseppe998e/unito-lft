@@ -22,6 +22,7 @@ public class Lexer {
     while (Character.isWhitespace(peek) || peek == Tag.DIV) {
       if (peek == '\n') line += 1;
 
+      // TODO Single DFA?
       //  Tag.DIV Token and Comments (Single line or Multi line)
       if (peek == Tag.DIV) {
         readChar(br);
