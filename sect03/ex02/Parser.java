@@ -42,7 +42,7 @@ public class Parser {
   }
 
   private void statp() {
-    switch(token.getTag()) {
+    switch (token.getTag()) {
       case Tag.ASN:
         match(Tag.ASN);
         match(Tag.ID);
@@ -73,19 +73,15 @@ public class Parser {
         break;
       default:
         error("statp() error");
-     }
+    }
   }
   
   private void elseopt() {
     if (token.getTag() == Tag.LPT) {
       match(Tag.LPT);
-      if (token.getTag() == Tag.ELSE) {
-        match(Tag.ELSE);
-        stat();
-        match(Tag.RPT);
-      } else {
-        error("elseopt() error");
-      }
+      match(Tag.ELSE);
+      stat();
+      match(Tag.RPT);
     } // else EPSILON
   }
 
@@ -102,7 +98,7 @@ public class Parser {
   }
 
   private void expr() {
-    switch(token.getTag()) {
+    switch (token.getTag()) {
       case Tag.NUM:
         match(Tag.NUM);
         break;
@@ -120,21 +116,21 @@ public class Parser {
   }
 
   private void exprp() {
-    switch(token.getTag()) {
-      case Tag.PLS: // +
+    switch (token.getTag()) {
+      case Tag.PLS:
         match(Tag.PLS);
         exprlist();
         break;
-      case Tag.MIN: // -
+      case Tag.MIN:
         match(Tag.MIN);
         expr();
         expr();
         break;
-      case Tag.MUL: // *
+      case Tag.MUL:
         match(Tag.MUL);
         exprlist();
         break;
-      case Tag.DIV: // /
+      case Tag.DIV:
         match(Tag.DIV);
         expr();
         expr();
@@ -145,33 +141,26 @@ public class Parser {
   }
 
   private void exprlist() {
-    switch(token.getTag()) {
-      case Tag.NUM:
-      case Tag.ID:
-      case Tag.LPT:
-        expr();
-        exprlistp();
-        break;
-      default:
-        error("exprlist() error");
-    }
+    expr();
+    exprlistp();
   }
 
   private void exprlistp() {
-    switch(token.getTag()) {
+    switch (token.getTag()) {
       case Tag.NUM:
       case Tag.ID:
       case Tag.LPT:
         expr();
         exprlistp();
-        break;
-      default:
-        if (token.getTag() != Tag.RPT) {
-          error("exprlistp() error");
-        }
+    }
+
+    if (token.getTag() == Tag.LPT) {
+      match(Tag.RPT);
     }
   }
-    
+
+  // -------------------------------------
+  // Util methods
   private void match(int t) {
     if (token.getTag() == t) {
       if (token.getTag() != Tag.EOF) move();

@@ -20,117 +20,84 @@ class Evaluator {
   }
 
   public int start() {
-    int returnVal = 0;
+    int exprVal = expr();
+    match(Tag.EOF);
 
-    if(token.getTag() == Tag.NUM || token.getTag() == Tag.LPT) {
-      returnVal = expr();
-      match(Tag.EOF);
-    } else {
-      error("start() error");
-    }
-
-    return returnVal;
+    return exprVal;
   }
 
   private int expr() {
-    int returnVal = 0;
-    
-    if(token.getTag() == Tag.NUM || token.getTag() == Tag.LPT) {
-      int termVal = term();
-      returnVal = exprp(termVal);
-    } else {
-      error("expr() error");
-    }
-
-    return returnVal;
+    int termVal = term();
+    return exprp(termVal);
   }
 
   private int exprp(int inputVal) {
-    int returnVal = 0;
+    int termVal = 0;
 
     switch (token.getTag()) {
       case Tag.PLS:
         match(Tag.PLS);
-        int termVal1 = term();
-        returnVal = exprp(inputVal + termVal1);
-        break;
+        termVal = term();
+        return exprp(inputVal + termVal);
       case Tag.MIN:
         match(Tag.MIN);
-        int termVal2 = term();
-        returnVal = exprp(inputVal - termVal2);
-        break;
-      case Tag.EOF:
-      case Tag.RPT:
-        returnVal = inputVal;
-        break;
+        termVal = term();
+        return exprp(inputVal - termVal);
       default:
-        error("exprp() error");
+        return inputVal;
     }
-
-    return returnVal;
   }
 
   private int term() {
-    int returnVal = 0;
-
-    if(token.getTag() == Tag.NUM || token.getTag() == '(') {
-      int factVal = fact();
-      returnVal = termp(factVal);
-    } else {
-      error("term() error");
-    }
-
-    return returnVal;
+    int factVal = fact();
+    return termp(factVal);
   }
 
   private int termp(int inputVal) {
-    int returnVal = 0;
+    int factVal = 0;
 
-    switch(token.getTag()) {
+    switch (token.getTag()) {
       case Tag.MUL:
         match(Tag.MUL);
-        int factVal1 = fact();
-        returnVal = termp(inputVal * factVal1);
-        break;
+        factVal = fact();
+        return termp(inputVal * factVal);
       case Tag.DIV:
         match(Tag.DIV);
-        int factVal2 = fact();
-        returnVal = termp(inputVal / factVal2);
-        break;
-      case Tag.PLS:
-      case Tag.MIN:
-      case Tag.RPT:
-      case Tag.EOF:
-        returnVal = inputVal;
-        break;
+        factVal = fact();
+        return termp(inputVal / factVal);
       default:
-        error("termp() error");
+        return inputVal;
     }
-
-    return returnVal;
   }
   
   private int fact() {
-    int returnVal = 0;
+    int returnVal = -1;
 
-    if (token.getTag() == Tag.NUM) {
-      returnVal = ((Number) token).getValue();
-      match(Tag.NUM);
-    } else if (token.getTag() == Tag.LPT) {
-      match(Tag.LPT);
-      returnVal = expr();
-      match(Tag.RPT);
-    } else {
-      error("fact() error: NUMBER or '(' expected");
+    switch (token.getTag()) {
+      case Tag.LPT:
+        match(Tag.LPT);
+        returnVal = expr();
+        match(Tag.RPT);
+        break;
+      case Tag.NUM:
+        returnVal = ((Number) token).getValue();
+        match(Tag.NUM);
+        break;
+      default:
+        error("fact() error");
     }
 
     return returnVal;
   }
 
+  // -------------------------------------
+  // Util methods
   private void match(int t) {
     if (token.getTag() == t) {
       if (token.getTag() != Tag.EOF) move();
-    } else error("syntax error, '" + t + "' expected, '" + token.getTag() + "' found");
+    } else {
+      error("Syntax error: '" + t + "' expected, '" + token.getTag() + "' found");
+    }
   }
 
   private void move() {
@@ -139,7 +106,7 @@ class Evaluator {
   }
 
   private void error(String s) {
-    throw new RuntimeException("near line " + lexer.getLine() + ": " + s);
+    throw new RuntimeException("Near line " + lexer.getLine() + ": " + s);
   }
 
   // -------------------------------------
