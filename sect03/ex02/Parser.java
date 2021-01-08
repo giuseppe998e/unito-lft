@@ -162,10 +162,12 @@ public class Parser {
   // -------------------------------------
   // Util methods
   private void match(int t) {
-    if (token.getTag() == t) {
-      if (token.getTag() != Tag.EOF) move();
-    } else {
+    if (token.getTag() != t) {
       error("Syntax error: '" + t + "' expected, '" + token.getTag() + "' found");
+    }
+
+    if (token.getTag() != Tag.EOF) {
+      move();
     }
   }
 
