@@ -1,4 +1,5 @@
 *.class
+*.j
 *.aux
 *.log
 *.gz

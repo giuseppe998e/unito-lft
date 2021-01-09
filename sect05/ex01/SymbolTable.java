@@ -10,11 +10,11 @@ public class SymbolTable {
     address = 0;
   }
 
-  public void insert(String s) {
+  public int insert(String s) {
     return insert(s, this.address++);
   }
 
-  public void insert(String s, int _address) {
+  public int insert(String s, int _address) {
     if (offsetMap.containsValue(_address)) {
       throw new IllegalArgumentException("Reference to a memory location already occupied by another variable");
     }

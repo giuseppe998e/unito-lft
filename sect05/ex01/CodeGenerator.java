@@ -1,4 +1,3 @@
-import java.util.List;
 import java.util.LinkedList;
 import java.io.FileWriter;
 import java.io.PrintWriter;
@@ -6,12 +5,12 @@ import java.io.IOException;
 import java.lang.RuntimeException;
 
 public class CodeGenerator {
-  private final List<Instruction> instructions;
-  private int newLabel;
+  private final LinkedList<Instruction> instructions;
+  private int label;
 
   public CodeGenerator() {
     this.instructions = new LinkedList<>();
-    this.newLabel = 0;
+    this.label = 0;
   }
 
   public void emit(OpCode opCode) {
@@ -30,8 +29,8 @@ public class CodeGenerator {
     return label++;
   }
 
-  public void toJasmin(String fileOut) {
-    try (FileWriter fWriter = new FileWriter(fileOut);
+  public void toJasmin(String outDir) {
+    try (FileWriter fWriter = new FileWriter(outDir + "Output.j");
           PrintWriter pWriter = new PrintWriter(fWriter)) {
       String temp = "" + header;
       while (instructions.size() > 0) {
@@ -40,8 +39,8 @@ public class CodeGenerator {
       }
       temp = temp + footer;
 
-      out.println(temp);
-      out.flush();
+      pWriter.println(temp);
+      pWriter.flush();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

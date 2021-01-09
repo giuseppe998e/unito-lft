@@ -11,14 +11,14 @@ RM     = rm -f
 # --------------------------
 # Set the default source text file and .J file if not passed by the user
 SRC := $(if $(SRC), $(SRC), "$(firstword $(MAKECMDGOALS))/source.pas")
-OUT := $(if $(OUT), $(OUT), "$(firstword $(MAKECMDGOALS))/Output.j")
+OUT := $(if $(OUT), $(OUT), "$(firstword $(MAKECMDGOALS))/")
 
 # --------------------------
-# Clean all exercise classes file
+# Clean all exercise classes file 
+# @$(SO_ENV) $(FIND) . -type f -name '*.j' -exec $(SO_ENV) $(RM) {} \;
 clean:
-	@$(SO_ENV) $(FIND) docs -not -name '*.tex' -exec $(SO_ENV) $(RM) {} \;
-	@$(SO_ENV) $(FIND) . -name '*.j' -exec $(SO_ENV) $(RM) {} \;
-	@$(SO_ENV) $(FIND) . -name '*.class' -exec $(SO_ENV) $(RM) {} \;
+	@$(SO_ENV) $(FIND) docs -type f -not -name '*.tex' -exec $(SO_ENV) $(RM) {} \;
+	@$(SO_ENV) $(FIND) . -type f -name '*.class' -exec $(SO_ENV) $(RM) {} \;
 	@$(SO_ENV) $(ECHO) "Class files cleaned!"
 
 # --------------------------
@@ -33,7 +33,7 @@ ex*: NUMEX = $(word 2, $(subst x, , $(NAMEX)))
 ex*:
 	@$(SO_ENV) $(ECHO) "Running exercise $(NUMEX)..."
 	@$(SO_ENV) $(JAVA) -cp $(NAMEX) $(word 2, $(SPLITEX)) $(SRC) $(OUT)
-	@$(SO_ENV) $(JAVA) -jar libs/jasmin.jar -d $(NAMEX) $(OUT)
+	@$(SO_ENV) $(JAVA) -jar libs/jasmin.jar -d $(NAMEX) $(NAMEX)/Output.j
 	@$(SO_ENV) $(JAVA) -cp $(NAMEX) Output
 
 # --------------------------
@@ -45,4 +45,4 @@ ex*:
 # --------------------------
 # Compile latex file
 pdf:
-	@$(SO_ENV) $(LTOP)
+	@$(SO_ENV) $(PDFTEX) -output-directory docs docs/sdt.tex

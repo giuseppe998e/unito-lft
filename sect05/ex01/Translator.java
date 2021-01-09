@@ -24,13 +24,13 @@ public class Translator {
 		move();
 	}
 
-  public void prog(String fileOut) {
+  public void prog(String outDir) {
     int lnextProg = codeGen.newLabel();
     stat();
     codeGen.emitLabel(lnextProg);
     
     match(Tag.EOF);
-    codeGen.toJasmin(fileOut);
+    codeGen.toJasmin(outDir);
   }
 
   private void statlist() {
@@ -182,7 +182,7 @@ public class Translator {
   // -------------------------------------
   // Util methods
   private int matchID() {
-    String identifier = token.getLexeme()
+    String identifier = token.getLexeme();
     int idAddr = symTable.lookupAddress(identifier);
     if (idAddr == -1) {
       idAddr = symTable.insert(identifier);
@@ -223,8 +223,8 @@ public class Translator {
       
       Translator translator = new Translator(lexer, bReader);
 
-      String fileOut = (args.length > 1) ? args[1] : "Output.j";
-      translator.prog(fileOut);
+      String outDir = (args.length > 1) ? args[1] + "/" : "";
+      translator.prog(outDir);
 
       System.out.println("Input: OK");
     } catch (IOException e) {

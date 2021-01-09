@@ -14,11 +14,11 @@ public class Token {
   }
 
   public int getValue() {
-    throw new UnsupportedOperationException('Not a number token');
+    throw new UnsupportedOperationException("Not a number token");
   }
 
   public String getLexeme() {
-    throw new UnsupportedOperationException('Not a word token');
+    throw new UnsupportedOperationException("Not a word token");
   }
 
   public String toString() {
