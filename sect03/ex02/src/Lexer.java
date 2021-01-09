@@ -129,6 +129,7 @@ public class Lexer {
       case '&':
         readChar(br);
         if (peek == '&') {
+          peek = ' ';
           return Token.AND;
         } else {
           throw new RuntimeException("Erroneous character after & : "  + peek );
