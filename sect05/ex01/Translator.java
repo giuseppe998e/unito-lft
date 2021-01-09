@@ -69,21 +69,25 @@ public class Translator {
         break;
       case Tag.COND:
         match(Tag.COND);
-        int lcondTrue  = codeGen.newLabel(),
+        int lcondTrue = codeGen.newLabel(),
             lcondFalse = codeGen.newLabel();
-        bexpr(lcondTrue, lcondFalse);  // If true, "continue"
-        stat(lcondTrue);               //
-        codeGen.emitLabel(lcondFalse); // If false, jump here
-        elseopt(lcondFalse);           //
+        bexpr(lcondTrue, lcondFalse);     // Check condition
+        codeGen.emitLabel(lcondTrue);     // If TRUE, "continue"...
+        stat(lcondTrue);                  // <-/
+        codeGen.emit(OpCode.GOto, lnext); // ...and jump to the next statement
+        codeGen.emitLabel(lcondFalse);    // If FALSE, jump
+        elseopt(lcondFalse);              // <-/
         break;
       case Tag.WHILE:
         match(Tag.WHILE);
         int lwhileTrue = codeGen.newLabel(),
             lwhileLoop = codeGen.newLabel();
-        codeGen.emitLabel(lwhileLoop);         // While...
-        bexpr(lwhileTrue, lnext);              // If true, "continue"
-        stat(lwhileLoop);                      //
-        codeGen.emit(OpCode.GOto, lwhileLoop); // ...do
+        codeGen.emitLabel(lwhileLoop);         // While (TRUE) {... 
+        bexpr(lwhileTrue, lnext);              // Check condition
+        codeGen.emitLabel(lwhileTrue);         // If TRUE, "continue"
+        stat(lwhileLoop);                      //<-/
+        codeGen.emit(OpCode.GOto, lwhileLoop); // ...} do
+        // (If FALSE, jump to "lnext")
         break;
       case Tag.DO:
         match(Tag.DO);
@@ -146,10 +150,11 @@ public class Translator {
         case "==":
           codeGen.emit(OpCode.if_icmpeq, ltrue);
           break;
+        default:
+          error("bexprp(type) error");
       }
 
       codeGen.emit(OpCode.GOto, lfalse);
-      codeGen.emitLabel(ltrue);
     } else {
       error("bexprp() error");
     }

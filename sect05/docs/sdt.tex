@@ -1,42 +1,69 @@
-\documentclass{article}
+\documentclass[a4paper]{article}
 \pagenumbering{gobble}
-\usepackage[a4paper, total={6in, 8in}]{geometry}
+
+\usepackage[left=0.25in, right=0.25in]{geometry}
 
 \usepackage[dvipsnames]{xcolor}
 \definecolor{MyGreen}{RGB}{0, 128, 0}
 \newcommand{\cmd}[1]{\textcolor{MyGreen}{\{\, #1 \,\}} \;}
 \newcommand{\node}[1]{\langle #1 \rangle \;}
+\newcommand{\tag}[1]{\texttt{#1} \;}
 
 \begin{document}
+\begin{center}
+\begin{tabular}{ r c l }
+  $\node{prog}$       & $::=$ & $\cmd{stat.next = newlabel()} \node{stat} \cmd{emitlabel(stat.next)} \tag{EOF}$ \\\\
+  $\node{statlist}$   & $::=$ & $\cmd{stat.next = newlabel()} \node{stat} \cmd{emitlabel(stat.next)}$ \\ 
+                      &       & $\cmd{statlistp.next = statlist.next}\node{statlistp}$ \\\\
+% --------------------------------------------------------------------------------------------------------------------%
+  $\node{statlistp}$  & $::=$ & $\cmd{stat.next = newlabel()} \node{stat} \cmd{emitlabel(stat.next)}$ \\ 
+                      &       & $\cmd{statlistp1.next = statlistp.next}\node{statlistp1}$ \\
 
-  \begin{center}
-    \begin{tabular}{ r c l }
-      $\node{prog}$       & $::=$ & $\cmd{stat.next = newlabel()} \node{stat} \cmd{emitlabel(stat.next)} \texttt{EOF}$ \\\\
-      $\node{statlist}$   & $::=$ & $\node{stat}$ $\node{statlistp}$ \\\\
-      $\node{statlistp}$  & $::=$ & $\node{stat}$ $\node{statlistp}$ \\
-                          &  $|$  & $\varepsilon$ \\\\
-      $\node{stat}$       & $::=$ & $(\; \node{statp})$ \\\\
-      $\node{statp}$      & $::=$ & $\texttt{= ID}\; \node{expr} \cmd{emit(istore(id.addr))}$ \\
-                          &  $|$  & $\texttt{cond}\; \node{bexpr} \node{stat} \node{elseopt}$\\
-                          &  $|$  & $\texttt{while}\; \node{bexpr} \node{stat}$ \\
-                          &  $|$  & $\texttt{do}\; \node{statlist}$ \\
-                          &  $|$  & $\texttt{print}\; \node{exprlist} \cmd{emit(invokestatic(print))}$ \\
-                          &  $|$  & $\texttt{read ID}\; \cmd{emit(invokestatic(read))} \cmd{emit(istore(id.addr))}$ \\\\
-      $\node{elseopt}$    & $::=$ & $(\; \texttt{else}\; \node{stat})$ \\
-                          &  $|$  & $\varepsilon$ \\\\
-      $\node{bexpr}$      & $::=$ & $(\; \node{bexprp} )$ \\\\
-      $\node{bexprp}$     & $::=$ & $\texttt{RELOP}\; \node{expr} \node{expr}$ \\\\
-      $\node{expr}$       & $::=$ & $\texttt{NUM}\; \cmd{emit(ldc(num.value))}$ \\
-                          &  $|$  & $\texttt{ID}\; \cmd{emit(iload(id.addr))}$\\
-                          &  $|$  & $(\; \node{exprp} )$ \\\\
-      $\node{exprp}$      & $::=$ & $\texttt{+}\; \node{exprlist} \cmd{emit(iadd)}$ \\
-                          &  $|$  & $\texttt{-}\; \node{expr} \node{expr} \cmd{emit(isub)}$ \\
-                          &  $|$  & $\texttt{*}\; \node{exprlist} \cmd{emit(imul)}$ \\
-                          &  $|$  & $\texttt{/}\; \node{expr} \node{expr} \cmd{emit(idiv)}$ \\\\
-      $\node{exprlist}$   & $::=$ & $\node{expr} \node{exprlistp}$ \\\\
-      $\node{exprlistp}$  & $::=$ & $\node{expr} \node{exprlistp}$ \\
-                          &  $|$  & $\varepsilon$ \\
-    \end{tabular}
-  \end{center}
+                      &  $|$  & $\varepsilon$ \\\\
+% --------------------------------------------------------------------------------------------------------------------%
+  $\node{stat}$       & $::=$ & $(\; \cmd{statp.next = stat.next} \node{statp})$ \\\\
+% --------------------------------------------------------------------------------------------------------------------%
+  $\node{statp}$      & $::=$ & $\texttt{= ID}\; \node{expr} \cmd{emit(istore(id.addr))}$ \\
 
+                      &  $|$  & $\tag{cond} \cmd{bexpr.true = newlabel()} \cmd{bexpr.false = newlabel()} \node{bexpr}$ \\ 
+                      &       & $\cmd{emitlabel(bexpr.true)} \cmd{stat.next = bexpr.true}$ \\
+                      &       & $\node{stat} \cmd{emit(goto(statp.next))} \cmd{ emitlabel(bexpr.false)}$ \\
+                      &       & $\cmd{elseopt.next = bexpr.false} \node{elseopt}$\\
+
+                      &  $|$  & $\tag{while} \cmd{bexpr.true = newlabel()} \cmd{bexpr.false = statp.next}$ \\
+                      &       & $\cmd{stat.next = newlabel()} \cmd{emitlabel(stat.next)} \node{bexpr}$ \\ 
+                      &       & $\cmd{emitlabel(bexpr.true)} \node{stat} \cmd{emit(goto(stat.next))}$ \\
+
+                      &  $|$  & $\tag{do} \cmd{statlist.next = statp.next} \node{statlist}$ \\
+
+                      &  $|$  & $\tag{print} \node{exprlist} \cmd{emit(invokestatic(print))}$ \\
+
+                      &  $|$  & $\texttt{read ID}\; \cmd{emit(invokestatic(read))} \cmd{emit(istore(id.addr))}$ \\\\
+% --------------------------------------------------------------------------------------------------------------------%
+  $\node{elseopt}$    & $::=$ & $(\; \tag{else} \cmd{stat.next = elseopt.next} \node{stat})$ \\
+                      &  $|$  & $\varepsilon$ \\\\
+% --------------------------------------------------------------------------------------------------------------------%
+  $\node{bexpr}$      & $::=$ & $(\; \cmd{bexprp.true = bexpr.true} \cmd{bexprp.false = bexpr.false} \node{bexprp} )$ \\\\
+% --------------------------------------------------------------------------------------------------------------------%
+  $\node{bexprp}$     & $::=$ & $\tag{RELOP} \node{expr} \node{expr} \cmd{emit(if\_icmp(bexprp.true))}$ \\
+                      &       & $\cmd{emit(goto(bexprp.false))}$ \\\\
+% --------------------------------------------------------------------------------------------------------------------%
+  $\node{expr}$       & $::=$ & $\tag{NUM} \cmd{emit(ldc(num.value))}$ \\
+
+                      &  $|$  & $\tag{ID} \cmd{emit(iload(id.addr))}$\\
+
+                      &  $|$  & $(\; \node{exprp} )$ \\\\
+% --------------------------------------------------------------------------------------------------------------------%
+  $\node{exprp}$      & $::=$ & $\texttt{+}\; \node{exprlist} \cmd{emit(iadd)}$ \\
+                      &  $|$  & $\texttt{-}\; \node{expr} \node{expr} \cmd{emit(isub)}$ \\
+                      &  $|$  & $\texttt{*}\; \node{exprlist} \cmd{emit(imul)}$ \\
+                      &  $|$  & $\texttt{/}\; \node{expr} \node{expr} \cmd{emit(idiv)}$ \\\\
+% --------------------------------------------------------------------------------------------------------------------%
+  $\node{exprlist}$   & $::=$ & $\node{expr} \node{exprlistp}$ \\\\
+% --------------------------------------------------------------------------------------------------------------------%
+  $\node{exprlistp}$  & $::=$ & $\node{expr} \node{exprlistp}$ \\
+
+                      &  $|$  & $\varepsilon$
+\end{tabular}
+\end{center}
 \end{document}
