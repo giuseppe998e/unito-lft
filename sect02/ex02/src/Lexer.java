@@ -3,10 +3,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.RuntimeException;
 
-import component.Tag;
-import component.Token;
-import component.Identifier;
-import component.Number;
+import language.Tag;
+import language.Token;
+import language.Identifier;
+import language.Number;
 
 public class Lexer {
   private int line;

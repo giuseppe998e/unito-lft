@@ -3,9 +3,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.RuntimeException;
 
-import lexer.Lexer;
-import lexer.component.Tag;
-import lexer.component.Token;
+import language.Tag;
+import language.Token;
 
 class Evaluator {
   private final BufferedReader bReader;
