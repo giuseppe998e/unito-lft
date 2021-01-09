@@ -1,6 +1,9 @@
 import java.util.List;
 import java.util.LinkedList;
-import java.io.*;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.IOException;
+import java.lang.RuntimeException;
 
 public class CodeGenerator {
   private final List<Instruction> instructions;
@@ -27,19 +30,21 @@ public class CodeGenerator {
     return label++;
   }
 
-  public void toJasmin() throws IOException {
-    PrintWriter out = new PrintWriter(new FileWriter("Output.j"));
-    
-    String temp = "" + header;
-    while (instructions.size() > 0) {
-      Instruction tmp = instructions.remove();
-      temp = temp + tmp.toJasmin();
-    }
-    temp = temp + footer;
+  public void toJasmin(String fileOut) {
+    try (FileWriter fWriter = new FileWriter(fileOut);
+          PrintWriter pWriter = new PrintWriter(fWriter)) {
+      String temp = "" + header;
+      while (instructions.size() > 0) {
+        Instruction tmp = instructions.remove();
+        temp = temp + tmp.toJasmin();
+      }
+      temp = temp + footer;
 
-    out.println(temp);
-    out.flush();
-    out.close();
+      out.println(temp);
+      out.flush();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private static final String header = ".class public Output \n" +
@@ -80,5 +85,6 @@ public class CodeGenerator {
     "\n" +
     ".method public static main([Ljava/lang/String;)V\n" +
     " invokestatic Output/run()V\n" +
-    " return\n";
+    " return\n" +
+    ".end method";
 }

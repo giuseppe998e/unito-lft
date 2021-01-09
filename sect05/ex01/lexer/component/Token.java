@@ -1,5 +1,7 @@
 package lexer.component;
 
+import java.lang.UnsupportedOperationException;
+
 public class Token {
   protected final int tag;
 
@@ -11,8 +13,16 @@ public class Token {
     return tag;
   }
 
+  public int getValue() {
+    throw new UnsupportedOperationException('Not a number token');
+  }
+
+  public String getLexeme() {
+    throw new UnsupportedOperationException('Not a word token');
+  }
+
   public String toString() {
-    String string = String.format("{tag: %3d, value: '%c'}", tag, (char)tag);
+    String string = String.format("{tag: %3d, char: '%c'}", tag, (char)tag);
     return string; 
   }
 
@@ -23,8 +33,8 @@ public class Token {
                             RPT   = new Token(Tag.RPT),
                             LPG   = new Token(Tag.LPG),
                             RPG   = new Token(Tag.RPG),
-                            PLS   = new Token(Tag.PLS),
-                            MIN   = new Token(Tag.MIN),
+                            ADD   = new Token(Tag.ADD),
+                            SUB   = new Token(Tag.SUB),
                             MUL   = new Token(Tag.MUL),
                             DIV   = new Token(Tag.DIV),
                             ASN   = new Token(Tag.ASN),

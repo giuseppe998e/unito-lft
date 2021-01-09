@@ -3,20 +3,27 @@ import java.util.HashMap;
 
 public class SymbolTable {
   private final Map<String, Integer> offsetMap;
+  private int address;
 
 	public SymbolTable() {
 		this.offsetMap = new HashMap<>();
-	}
+    address = 0;
+  }
 
-  public void insert(String s, int address) {
-    if (!offsetMap.containsValue(address)) {
-      offsetMap.put(s, address);
-		} else {
-      throw new IllegalArgumentException("Riferimento ad una locazione di memoria già occupata da un’altra variabile");
-		}
+  public void insert(String s) {
+    return insert(s, this.address++);
+  }
+
+  public void insert(String s, int _address) {
+    if (offsetMap.containsValue(_address)) {
+      throw new IllegalArgumentException("Reference to a memory location already occupied by another variable");
+    }
+    
+    offsetMap.put(s, _address);
+    return _address;
   }
 
   public int lookupAddress(String s) {
-    return offsetMap.containsKey(s) ? offsetMap.get(s) : -1;
+    return offsetMap.getOrDefault(s, -1);
   }
 }

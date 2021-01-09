@@ -19,10 +19,8 @@ public class Instruction {
         temp = " ldc " + operand + "\n";
         break;
       case invokestatic:
-        if (operand == 1)
-          temp = " invokestatic " + "Output/print(I)V" + "\n";
-        else
-          temp = " invokestatic " + "Output/read()I" + "\n";
+        temp = " invokestatic Output/" +
+          (operand == 1 ? "print(I)V" : "read()I" ) + "\n";
         break;
       case iadd:
         temp = " iadd " + "\n";
