@@ -1,0 +1,38 @@
+S   -> E EOF
+E   -> T Ep
+Ep  -> + T Ep | - T Ep | EPSILON
+T   -> F Tp
+Tp  -> * F Tp | / F Tp | EPSILON
+F   -> ( E ) | NUM
+
+----
+
+FIRST(S)  = { (, NUM }
+FIRST(E)  = { (, NUM }
+FIRST(Ep) = { +, -, EPSILON }
+FIRST(T)  = { (, NUM }
+FIRST(Tp) = { *, /, EPSILON }
+FIRST(F)  = { (, NUM }
+
+----
+
+FOLLOW(S)  = { $ }
+FOLLOW(E)  = { ), $ }
+FOLLOW(Ep) = { ), $ }
+FOLLOW(T)  = { +, -, EPSILON }
+FOLLOW(Tp) = { +, -, EPSILON }
+FOLLOW(F)  = { *, /, EPSILON }
+
+----
+
+PREDICT(S  -> E)       = { (, NUM }
+PREDICT(E  ->  )       = { (, NUM }
+PREDICT(Ep -> + T Ep)  = { + }
+PREDICT(Ep -> - T Ep)  = { - }
+PREDICT(Ep -> EPSILON) = { EPSILON }
+PREDICT(T  -> F Tp)    = { (, NUM }
+PREDICT(Tp -> * F Tp)  = { * }
+PREDICT(Tp -> / F Tp)  = { / }
+PREDICT(Tp -> EPSILON) = { "EPSILON }
+PREDICT(F  -> ( E ))   = { ( }
+PREDICT(F  -> NUM)     = { NUM }

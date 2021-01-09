@@ -1,2 +1,8 @@
 *.class
+*.j
+*.aux
+*.log
+*.gz
+*.fdb_latexmk
+*.fls
 *.pdf
