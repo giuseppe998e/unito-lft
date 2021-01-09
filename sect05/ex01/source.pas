@@ -1,4 +1,10 @@
 (do
 	(read x)
-	(print (+ x 1))
+	(while 
+		(>= x 1)
+		(do
+			(= x (- x 1))
+			(print x)
+		)
+	)
 )

@@ -25,33 +25,41 @@ public class Translator {
 	}
 
   public void prog(String outDir) {
-    int lnextProg = codeGen.newLabel();
-    stat();
-    codeGen.emitLabel(lnextProg);
-    
+    int lnextNew = codeGen.newLabel();
+    stat(lnextNew);
+    codeGen.emitLabel(lnextNew);
+
     match(Tag.EOF);
     codeGen.toJasmin(outDir);
   }
 
-  private void statlist() {
-    stat();
-    statlistp();
+  private void statlist(int lnext) {
+    int lnextNew = codeGen.newLabel();
+    stat(lnextNew);
+    codeGen.emitLabel(lnextNew);
+
+    statlistp(lnext);
   }
 
-  private void statlistp() {
+  private void statlistp(int lnext) {
     if (token.getTag() == Tag.LPT) {
-      stat();
-      statlistp();
+      /*
+        int lnextNew = codeGen.newLabel();
+        stat(lnextNew);
+        codeGen.emitLabel(lnextNew);
+    
+        statlistp(lnext);
+      == */ statlist(lnext);
     } // else EPSILON
   }
 
-  private void stat() {
+  private void stat(int lnext) {
     match(Tag.LPT);
-    statp();
+    statp(lnext);
     match(Tag.RPT);
   }
 
-  private void statp() {
+  private void statp(int lnext) {
     switch (token.getTag()) {
       case Tag.ASN:
         match(Tag.ASN);
@@ -61,18 +69,27 @@ public class Translator {
         break;
       case Tag.COND:
         match(Tag.COND);
-        bexpr();
-        stat();
-        elseopt();
+        int lcondTrue  = codeGen.newLabel(),
+            lcondFalse = codeGen.newLabel();
+        bexpr(lcondTrue, lcondFalse);  // If true, "continue"
+        codeGen.emitLabel(lcondTrue);  // <-/
+        stat(lcondTrue);               //
+        codeGen.emitLabel(lcondFalse); // If false, jump here
+        elseopt(lcondFalse);           //
         break;
       case Tag.WHILE:
         match(Tag.WHILE);
-        bexpr();
-        stat();
+        int lwhileTrue = codeGen.newLabel(),
+            lwhileLoop = codeGen.newLabel();
+        codeGen.emitLabel(lwhileLoop);         // While...
+        bexpr(lwhileTrue, lnext);              // If true, "continue"
+        codeGen.emitLabel(lwhileTrue);         // <-/ 
+        stat(lwhileLoop);                      //
+        codeGen.emit(OpCode.GOto, lwhileLoop); // ...do
         break;
       case Tag.DO:
         match(Tag.DO);
-        statlist();
+        statlist(lnext);
         break;
       case Tag.PRINT:
         match(Tag.PRINT);
@@ -90,25 +107,53 @@ public class Translator {
     }
   }
   
-  private void elseopt() {
+  private void elseopt(int lnext) {
     if (token.getTag() == Tag.LPT) {
       match(Tag.LPT);
       match(Tag.ELSE);
-      stat();
+      stat(lnext);
       match(Tag.RPT);
     } // else EPSILON
   }
 
-  private void bexpr() {
+  private void bexpr(int ltrue, int lfalse) {
     match(Tag.LPT);
-    bexprp();
+    bexprp(ltrue, lfalse);
     match(Tag.RPT);
   }
 
-  private void bexprp() {
-    match(Tag.RELOP);
-    expr();
-    expr();
+  private void bexprp(int ltrue, int lfalse) {
+    if (token.getTag() == Tag.RELOP) {
+      String type = token.getLexeme();
+      match(Tag.RELOP);
+      expr();
+      expr();
+
+      switch (type) {
+        case "<":
+          codeGen.emit(OpCode.if_icmplt, ltrue);
+          break;
+        case ">":
+          codeGen.emit(OpCode.if_icmpgt, ltrue);
+          break;
+        case "<=":
+          codeGen.emit(OpCode.if_icmple, ltrue);
+          break;
+        case ">=":
+          codeGen.emit(OpCode.if_icmpge, ltrue);
+          break;
+        case "<>":
+          codeGen.emit(OpCode.if_icmpne, ltrue);
+          break;
+        case "==":
+          codeGen.emit(OpCode.if_icmpeq, ltrue);
+          break;
+      }
+
+      codeGen.emit(OpCode.GOto, lfalse);
+    } else {
+      error("bexprp() error");
+    }
   }
 
   private void expr() {
@@ -170,8 +215,9 @@ public class Translator {
       case Tag.NUM:
       case Tag.ID:
       case Tag.LPT:
-        expr();
+        /*expr();
         exprlistp();
+        ==*/ exprlist();
     }
 
     if (token.getTag() == Tag.LPT) {
@@ -199,9 +245,13 @@ public class Translator {
   }
 
   private void match(int t) {
-    if (token.getTag() == t) {
-      if (token.getTag() != Tag.EOF) move();
-    } else error("syntax error, '" + t + "' expected, '" + token.getTag() + "' found");
+    if (token.getTag() != t) {
+      error("Syntax error: '" + t + "' expected, '" + token.getTag() + "' found");
+    }
+
+    if (token.getTag() != Tag.EOF) {
+      move();
+    }
   }
 
   private void move() {
@@ -210,7 +260,7 @@ public class Translator {
   }
 
   private void error(String s) {
-    throw new RuntimeException("near line " + lexer.getLine() + ": " + s);
+    throw new RuntimeException("Near line " + lexer.getLine() + ": " + s);
   }
 
   // -------------------------------------
@@ -225,8 +275,6 @@ public class Translator {
 
       String outDir = (args.length > 1) ? args[1] + "/" : "";
       translator.prog(outDir);
-
-      System.out.println("Input: OK");
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
