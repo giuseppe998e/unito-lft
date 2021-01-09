@@ -35,12 +35,12 @@ class Evaluator {
     int termVal = 0;
 
     switch (token.getTag()) {
-      case Tag.PLS:
-        match(Tag.PLS);
+      case Tag.ADD:
+        match(Tag.ADD);
         termVal = term();
         return exprp(inputVal + termVal);
-      case Tag.MIN:
-        match(Tag.MIN);
+      case Tag.SUB:
+        match(Tag.SUB);
         termVal = term();
         return exprp(inputVal - termVal);
       default:

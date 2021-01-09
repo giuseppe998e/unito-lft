@@ -73,12 +73,12 @@ public class Lexer {
       case Tag.RPG:
         peek = ' ';
         return Token.RPG;
-      case Tag.PLS:
+      case Tag.ADD:
         peek = ' ';
-        return Token.PLS;
-      case Tag.MIN:
+        return Token.ADD;
+      case Tag.SUB:
         peek = ' ';
-        return Token.MIN;
+        return Token.SUB;
       case Tag.MUL:
         peek = ' ';
         return Token.MUL;

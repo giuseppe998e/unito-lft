@@ -117,12 +117,12 @@ public class Parser {
 
   private void exprp() {
     switch (token.getTag()) {
-      case Tag.PLS:
-        match(Tag.PLS);
+      case Tag.ADD:
+        match(Tag.ADD);
         exprlist();
         break;
-      case Tag.MIN:
-        match(Tag.MIN);
+      case Tag.SUB:
+        match(Tag.SUB);
         expr();
         expr();
         break;

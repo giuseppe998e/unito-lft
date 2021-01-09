@@ -30,13 +30,13 @@ public class Parser {
 
   private void exprp() {
     switch (token.getTag()) {
-      case Tag.PLS:
-        match(Tag.PLS);
+      case Tag.ADD:
+        match(Tag.ADD);
         term();
         exprp();
         break;
-      case Tag.MIN:
-        match(Tag.MIN);
+      case Tag.SUB:
+        match(Tag.SUB);
         term();
         exprp();
         break;

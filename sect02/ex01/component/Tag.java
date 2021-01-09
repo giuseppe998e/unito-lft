@@ -7,6 +7,6 @@ public final class Tag {
                           READ = 267, OR = 268, AND = 269;
 
   public final static char NOT = '!', LPT = '(', RPT = ')', LPG = '{',
-                            RPG = '}', PLS = '+', MIN = '-', MUL= '*',
+                            RPG = '}', ADD = '+', SUB = '-', MUL= '*',
                             DIV = '/', ASN = '=', SCL = ';';
 }

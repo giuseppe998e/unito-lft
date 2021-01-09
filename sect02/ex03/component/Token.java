@@ -23,8 +23,8 @@ public class Token {
                             RPT = new Token(Tag.RPT), // )
                             LPG = new Token(Tag.LPG), // {
                             RPG = new Token(Tag.RPG), // }
-                            PLS = new Token(Tag.PLS), // +
-                            MIN = new Token(Tag.MIN), // -
+                            ADD = new Token(Tag.ADD), // +
+                            SUB = new Token(Tag.SUB), // -
                             MUL = new Token(Tag.MUL), // *
                             DIV = new Token(Tag.DIV), // /
                             ASN = new Token(Tag.ASN), // =
