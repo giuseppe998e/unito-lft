@@ -18,9 +18,41 @@ public class Lexer {
   }
 
   public Token scan(BufferedReader br) {
-    // Spaces
-    while (Character.isWhitespace(peek)) {
+    // Spaces, Tag.DIV Token and Comments (Single line or Multi line)
+    while (Character.isWhitespace(peek) || peek == Tag.DIV) {
       if (peek == '\n') line += 1;
+
+      // TODO Single DFA?
+      //  Tag.DIV Token and Comments (Single line or Multi line)
+      if (peek == Tag.DIV) {
+        readChar(br);
+        
+        if (peek == Tag.MUL) {
+          int state = 0;
+          while (state < 2 && peek != (char) Tag.EOF) {
+            readChar(br);
+            switch(state) {
+              case 0:
+                if (peek == Tag.MUL) state = 1;
+                break;
+              case 1:
+                if (peek == Tag.DIV) state = 2;
+                else state = 0;
+            }
+          }
+
+          if (state < 2) {
+            throw new RuntimeException("Comment area not closed");
+          }
+
+          peek = ' ';
+        } else if (peek == Tag.DIV) {
+          while(peek != '\n') readChar(br);
+        } else {
+          return Token.DIV;
+        }
+      }
+
       readChar(br);
     }
 
@@ -50,9 +82,9 @@ public class Lexer {
       case Tag.MUL:
         peek = ' ';
         return Token.MUL;
-      case Tag.DIV:
-        peek = ' ';
-        return Token.DIV;
+//    case Tag.DIV:
+//      peek = ' ';
+//      return Token.DIV;
       case Tag.SCL:
         peek = ' ';
         return Token.SCL;
@@ -104,13 +136,13 @@ public class Lexer {
         }
     }
 
-    // Word Tokens OR Identifiers
-    if (Character.isLetter(peek)) {
+    // Word Tokens, Numbers and Identifiers
+    if (Character.isLetter(peek) || Character.isDigit(peek) || peek == '_') {
       String lexeme = "";
       do {
         lexeme += peek;
         readChar(br);
-      } while (Character.isLetter(peek));
+      } while (Character.isLetter(peek) || Character.isDigit(peek) || peek == '_');
 
       switch(lexeme.toLowerCase()) {
         case "cond":
@@ -132,19 +164,36 @@ public class Lexer {
         case "read":
           return Token.READ;
       }
-      
-      return new Identifier(lexeme);
-    }
 
-    // (Non-Negative) Numbers
-    if (Character.isDigit(peek)) {
-      String number = "";
-      do {
-        number += peek;
-        readChar(br);
-      } while (Character.isDigit(peek));
+      // DFA for Identifiers and Numbers
+      int state = 0;
+      for(int i = 0; state > -1 && i < lexeme.length(); i++) {
+        final char ch = lexeme.charAt(i);
 
-      return new Number(Integer.parseInt(number));
+        switch(state) {
+          case 0:
+            if (Character.isLetter(ch)) state = 1;
+            else if (Character.isDigit(ch)) state = 2;
+            else if (ch != '_') state = -1;
+            break;
+          case 1:
+            if (!(Character.isLetter(ch) || Character.isDigit(ch) || ch == '_')) state = -1;
+            break;
+          case 2:
+            if (!Character.isDigit(ch)) state = -1;
+            break;
+        }
+      }
+
+      // If Identifier
+      if (state == 1) {
+        return new Identifier(lexeme);
+      }
+
+      // If Number
+      if (state == 2) {
+        return new Number(Integer.valueOf(lexeme));
+      }
     }
 
     // Illegal character
@@ -154,7 +203,6 @@ public class Lexer {
   public int getLine() {
     return line;
   }
-
 
   private void readChar(BufferedReader br) {
     try {
