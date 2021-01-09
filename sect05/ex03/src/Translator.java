@@ -116,13 +116,13 @@ public class Translator {
     } // else EPSILON
   }
 
-  private void bexpr(int ltrue) {
+  private void bexpr(int lfalse) {
     match(Tag.LPT);
-    bexprp(ltrue);
+    bexprp(lfalse);
     match(Tag.RPT);
   }
 
-  private void bexprp(int ltrue) {
+  private void bexprp(int lfalse) {
     if (token.getTag() == Tag.RELOP) {
       String type = token.getLexeme();
       match(Tag.RELOP);
@@ -131,22 +131,22 @@ public class Translator {
 
       switch (type) {
         case "<":
-          codeGen.emit(OpCode.if_icmpge, ltrue); // >=
+          codeGen.emit(OpCode.if_icmpge, lfalse); // >=
           break;
         case ">":
-          codeGen.emit(OpCode.if_icmple, ltrue); // <=
+          codeGen.emit(OpCode.if_icmple, lfalse); // <=
           break;
         case "<=":
-          codeGen.emit(OpCode.if_icmpgt, ltrue); // >
+          codeGen.emit(OpCode.if_icmpgt, lfalse); // >
           break;
         case ">=":
-          codeGen.emit(OpCode.if_icmplt, ltrue); // <
+          codeGen.emit(OpCode.if_icmplt, lfalse); // <
           break;
         case "<>":
-          codeGen.emit(OpCode.if_icmpeq, ltrue); // ==
+          codeGen.emit(OpCode.if_icmpeq, lfalse); // ==
           break;
         case "==":
-          codeGen.emit(OpCode.if_icmpne, ltrue); // <>
+          codeGen.emit(OpCode.if_icmpne, lfalse); // <>
           break;
         default:
           error("bexprp(type) error");
