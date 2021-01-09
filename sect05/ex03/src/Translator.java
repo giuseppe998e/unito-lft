@@ -123,6 +123,33 @@ public class Translator {
   }
 
   private void bexprp(int lfalse) {
+    switch (token.getTag()) {
+      case Tag.AND:
+        match(Tag.AND);
+
+        bexpr(lfalse);
+        bexpr(lfalse);
+
+        return;
+      case Tag.OR:
+        match(Tag.OR);
+        
+        int lbexprTrue = codeGen.newLabel(),
+            lbexprFalse = codeGen.newLabel();
+        
+        bexpr(lbexprFalse);
+        codeGen.emit(OpCode.GOto, lbexprTrue);
+        codeGen.emitLabel(lbexprFalse);
+        bexpr(lfalse);
+        codeGen.emitLabel(lbexprTrue);
+
+        return;
+      case Tag.NOT:
+        match(Tag.NOT);
+        // TODO Reverse the next code snippet
+        return;
+    }
+
     if (token.getTag() == Tag.RELOP) {
       String type = token.getLexeme();
       match(Tag.RELOP);
