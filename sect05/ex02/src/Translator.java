@@ -8,20 +8,20 @@ import language.Token;
 
 public class Translator {
   private final BufferedReader bReader;
-	private final SymbolTable symTable;
-	private final CodeGenerator codeGen;
+  private final SymbolTable symTable;
+  private final CodeGenerator codeGen;
   private final Lexer lexer;
   private Token token;
 
-	public Translator(Lexer lexer, BufferedReader bReader) {
-		this.symTable = new SymbolTable();
-		this.codeGen = new CodeGenerator();
+  public Translator(Lexer lexer, BufferedReader bReader) {
+    this.symTable = new SymbolTable();
+    this.codeGen = new CodeGenerator();
 
-		this.lexer = lexer;
-		this.bReader = bReader;
+    this.lexer = lexer;
+    this.bReader = bReader;
 
-		move();
-	}
+    move();
+  }
 
   public void prog(String outDir) {
     int lnextNew = codeGen.newLabel();

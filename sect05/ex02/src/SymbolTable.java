@@ -5,8 +5,8 @@ public class SymbolTable {
   private final Map<String, Integer> offsetMap;
   private int address;
 
-	public SymbolTable() {
-		this.offsetMap = new HashMap<>();
+  public SymbolTable() {
+    this.offsetMap = new HashMap<>();
     address = 0;
   }
 
