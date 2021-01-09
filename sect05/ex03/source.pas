@@ -5,7 +5,7 @@
 		(do
 			(= x (- x 1))
 			(cond 
-				(> x 4)
+				(&& (> x 4) (< x 6))
 				(print x)
 				(else 
 					(print (+ x 100))

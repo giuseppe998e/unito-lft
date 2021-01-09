@@ -43,7 +43,13 @@
 % --------------------------------------------------------------------------------------------------------------------%
   $\node{bexpr}$      & $::=$ & $(\; \cmd{bexprp.false = bexpr.false} \node{bexprp} )$ \\\\
 % --------------------------------------------------------------------------------------------------------------------%
-  $\node{bexprp}$     & $::=$ & $\tag{RELOP} \node{expr} \node{expr} \cmd{emit(if\_icmp(bexprp.false))}$ \\\\
+  $\node{bexprp}$     & $::=$ & $\tag{\&\&} \cmd{bexpr1.false = bexprp.false} \node{bexpr1}$ \\
+                      &       & $\cmd{bexpr2.false = bexprp.false} \node{bexpr2}$ \\
+                      &  $|$  & $\tag{||} \cmd{bexprp.true = newlabel()} \cmd{bexpr1.false = newlabel()} \node{bexpr1}$ \\
+                      &       & $\cmd{emit(goto(bexprp.true))} \cmd{emitlabel(bexpr1.false)}$ \\
+                      &       & $\cmd{bexpr2.false = bexprp.false} \node{bexpr2} \cmd{emitlabel(bexprp.true)}$ \\
+                      &  $|$  & $\;\tag{!}\; \cmd{bexpr.true = bexprp.false} \node{bexpr}$ TODO \\
+                      &  $|$  & $\tag{RELOP} \node{expr} \node{expr} \cmd{emit(if\_icmp(bexprp.false))}$ \\\\
 % --------------------------------------------------------------------------------------------------------------------%
   $\node{expr}$       & $::=$ & $\tag{NUM} \cmd{emit(ldc(num.value))}$ \\
 
