@@ -72,7 +72,6 @@ public class Translator {
         int lcondTrue  = codeGen.newLabel(),
             lcondFalse = codeGen.newLabel();
         bexpr(lcondTrue, lcondFalse);  // If true, "continue"
-        codeGen.emitLabel(lcondTrue);  // <-/
         stat(lcondTrue);               //
         codeGen.emitLabel(lcondFalse); // If false, jump here
         elseopt(lcondFalse);           //
@@ -83,7 +82,6 @@ public class Translator {
             lwhileLoop = codeGen.newLabel();
         codeGen.emitLabel(lwhileLoop);         // While...
         bexpr(lwhileTrue, lnext);              // If true, "continue"
-        codeGen.emitLabel(lwhileTrue);         // <-/ 
         stat(lwhileLoop);                      //
         codeGen.emit(OpCode.GOto, lwhileLoop); // ...do
         break;
@@ -151,6 +149,7 @@ public class Translator {
       }
 
       codeGen.emit(OpCode.GOto, lfalse);
+      codeGen.emitLabel(ltrue);
     } else {
       error("bexprp() error");
     }
