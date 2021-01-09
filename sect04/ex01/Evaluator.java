@@ -6,7 +6,6 @@ import java.lang.RuntimeException;
 import lexer.Lexer;
 import lexer.component.Tag;
 import lexer.component.Token;
-import lexer.component.Number;
 
 class Evaluator {
   private final BufferedReader bReader;
@@ -80,7 +79,7 @@ class Evaluator {
         match(Tag.RPT);
         break;
       case Tag.NUM:
-        returnVal = ((Number) token).getValue();
+        returnVal = token.getValue();
         match(Tag.NUM);
         break;
       default:

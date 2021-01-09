@@ -1,5 +1,7 @@
 package lexer.component;
 
+import java.lang.UnsupportedOperationException;
+
 public class Token {
   protected final int tag;
 
@@ -9,6 +11,14 @@ public class Token {
 
   public int getTag() {
     return tag;
+  }
+
+  public int getValue() {
+    throw new UnsupportedOperationException("Not a number token");
+  }
+
+  public String getLexeme() {
+    throw new UnsupportedOperationException("Not a word token");
   }
 
   public String toString() {
