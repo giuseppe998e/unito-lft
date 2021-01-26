@@ -1,70 +1,77 @@
-P    -> S $
-Sl   -> S Slp
-Slp  -> S Slp | EPSILON
-S    -> ( Sp )
-Sp   -> = ID Ex | cond B S El | while B S | do Sl | print Exl | read ID
-El   -> ( else S ) | EPSILON
-B    -> ( Bp )
-Bp   -> RELOP Ex Ex
-Ex   -> NUM | ID | ( Exp )
-Exp  -> + Exl | - Ex Ex | * Exl | / Ex Ex
-Exl  -> Ex Exlp
-Exlp -> Ex Exlp | EPSILON
+P   -> S
+SL  -> S SLP
+SLP -> S SLP
+     | ε
+S   -> ( SP )
+SP  -> = id EX
+     | cond B S EO
+     | while B S
+     | do SL
+     | print EL
+     | read id
+EO  -> ( else S )
+     | ε
+B   -> ( BP )
+BP  -> relop EX EX
+EX  -> n
+     | id
+     | ( EXP )
+EXP -> + EL
+     | - EX EX
+     | * EL
+     | / EX EX
+EL  -> EX ELP
+ELP -> EX ELP
+     | ε
 
-----
+FIRST(P)   = {(}
+FIRST(SL)  = {(}
+FIRST(SLP) = {(, ε}
+FIRST(S)   = {(}
+FIRST(SP)  = {=, cond, while, do, print, read}
+FIRST(EO)  = {(, ε}
+FIRST(B)   = {(}
+FIRST(BP)  = {relop}
+FIRST(EX)  = {(, id, n}
+FIRST(EXP) = {+, -, *, /}
+FIRST(EL)  = {(, id, n}
+FIRST(ELP) = {(, id, n, ε}
 
-FIRST(P)    = { ( }
-FIRST(Sl)   = { ( }
-FIRST(Slp)  = { EPSILON, ( }
-FIRST(S)    = { ( }
-FIRST(Sp)   = { =, cond, while, do, print, read }
-FIRST(El)   = { (, EPSILON }
-FIRST(B)    = { ( }
-FIRST(Bp)   = { RELOP }
-FIRST(Ex)   = { NUM, ID, ( }
-FIRST(Exp)  = { +, -, *, / }
-FIRST(Exl)  = { NUM, ID, ( }
-FIRST(Exlp) = { EPSILON, NUM, ID, ( }
+FOLLOW(P)   = {$}
+FOLLOW(SL)  = {)}
+FOLLOW(SLP) = {)}
+FOLLOW(S)   = {(, ), $}
+FOLLOW(SP)  = {)}
+FOLLOW(EO)  = {)}
+FOLLOW(B)   = {(}
+FOLLOW(BP)  = {)}
+FOLLOW(EX)  = {(, ), id, n}
+FOLLOW(EXP) = {)}
+FOLLOW(EL)  = {)}
+FOLLOW(ELP) = {)}
 
-----
-
-FOLLOW(P)    = { $ }
-FOLLOW(Sl)   = { ) }
-FOLLOW(Slp)  = { ) }
-FOLLOW(S)    = { ), (, EPSILON, $ }
-FOLLOW(Sp)   = { ) }
-FOLLOW(El)   = { ) }
-FOLLOW(B)    = { ( }
-FOLLOW(Bp)   = { ) }
-FOLLOW(Ex)   = { EPSILON, NUM, ID, (, ) }
-FOLLOW(Exp)  = { ) }
-FOLLOW(Exl)  = { ) }
-FOLLOW(Exlp) = { ) }
-
-----
-
-PREDICT(P    -> S)           = { ( }
-PREDICT(Sl   -> S Slp)       = { ( }
-PREDICT(Slp  -> S Slp)       = { ( }
-PREDICT(Slp  -> EPSILON)     = { EPSILON }
-PREDICT(S    -> ( Sp ))      = { ( }
-PREDICT(Sp   -> = ID Ex)     = { = }
-PREDICT(Sp   -> cond B S El) = { cond }
-PREDICT(Sp   -> while B S)   = { while }
-PREDICT(Sp   -> do Sl)       = { do }
-PREDICT(Sp   -> print Exl)   = { print }
-PREDICT(Sp   -> read ID)     = { read }
-PREDICT(El   -> ( else S ))  = { ( }
-PREDICT(El   -> EPSILON)     = { EPSILON }
-PREDICT(B    -> ( Bp ))      = { ( }
-PREDICT(Bp   -> RELOP Ex Ex) = { RELOP }
-PREDICT(Ex   -> NUM)         = { NUM }
-PREDICT(Ex   -> ID)          = { ID }
-PREDICT(Ex   -> ( Exp ))     = { ( }
-PREDICT(Exp  -> + Exl)       = { + }
-PREDICT(Exp  -> - Ex Ex)     = { - }
-PREDICT(Exp  -> * Exl)       = { * }
-PREDICT(Exp  -> / Ex Ex)     = { / }
-PREDICT(Exl  -> Ex Exlp)     = { NUM, ID, ( }
-PREDICT(Exlp -> Ex Exlp)     = { NUM, ID, ( }
-PREDICT(Exlp -> EPSILON)     = { EPSILON }
+GUIDA(P   -> S)           = {(}
+GUIDA(SL  -> S SLP)       = {(}
+GUIDA(SLP -> S SLP)       = {(}
+GUIDA(SLP -> ε)           = {)}
+GUIDA(S   -> ( SP ))      = {(}
+GUIDA(SP  -> = id EX)     = {=}
+GUIDA(SP  -> cond B S EO) = {cond}
+GUIDA(SP  -> while B S)   = {while}
+GUIDA(SP  -> do SL)       = {do}
+GUIDA(SP  -> print EL)    = {print}
+GUIDA(SP  -> read id)     = {read}
+GUIDA(EO  -> ( else S ))  = {(}
+GUIDA(EO  -> ε)           = {)}
+GUIDA(B   -> ( BP ))      = {(}
+GUIDA(BP  -> relop EX EX) = {relop}
+GUIDA(EX  -> n)           = {n}
+GUIDA(EX  -> id)          = {id}
+GUIDA(EX  -> ( EXP ))     = {(}
+GUIDA(EXP -> + EL)        = {+}
+GUIDA(EXP -> - EX EX)     = {-}
+GUIDA(EXP -> * EL)        = {*}
+GUIDA(EXP -> / EX EX)     = {/}
+GUIDA(EL  -> EX ELP)      = {(, id, n}
+GUIDA(ELP -> EX ELP)      = {(, id, n}
+GUIDA(ELP -> ε)           = {)}

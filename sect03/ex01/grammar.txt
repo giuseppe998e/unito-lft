@@ -1,38 +1,37 @@
-S   -> E EOF
-E   -> T Ep
-Ep  -> + T Ep | - T Ep | EPSILON
-T   -> F Tp
-Tp  -> * F Tp | / F Tp | EPSILON
-F   -> ( E ) | NUM
+S  -> E
+E  -> T EP
+EP -> + T EP
+    | - T EP
+    | ε
+T  -> F TP
+TP -> * F TP
+    | / F TP
+    | ε
+F  -> ( E )
+    | n
 
-----
+FIRST(S)  = {(, n}
+FIRST(E)  = {(, n)}
+FIRST(EP) = {+, -, ε}
+FIRST(T)  = {(, n)}
+FIRST(TP) = {*, /, ε}
+FIRST(F)  = {(, n)}
 
-FIRST(S)  = { (, NUM }
-FIRST(E)  = { (, NUM }
-FIRST(Ep) = { +, -, EPSILON }
-FIRST(T)  = { (, NUM }
-FIRST(Tp) = { *, /, EPSILON }
-FIRST(F)  = { (, NUM }
+FOLLOW(S)  = {$}
+FOLLOW(E)  = {), $}
+FOLLOW(EP) = {), $}
+FOLLOW(T)  = {+, -, ), $}
+FOLLOW(TP) = {+, -, ), $}
+FOLLOW(F)  = {+, -, *, /, ), $}
 
-----
-
-FOLLOW(S)  = { $ }
-FOLLOW(E)  = { ), $ }
-FOLLOW(Ep) = { ), $ }
-FOLLOW(T)  = { +, -, EPSILON }
-FOLLOW(Tp) = { +, -, EPSILON }
-FOLLOW(F)  = { *, /, EPSILON }
-
-----
-
-PREDICT(S  -> E)       = { (, NUM }
-PREDICT(E  ->  )       = { (, NUM }
-PREDICT(Ep -> + T Ep)  = { + }
-PREDICT(Ep -> - T Ep)  = { - }
-PREDICT(Ep -> EPSILON) = { EPSILON }
-PREDICT(T  -> F Tp)    = { (, NUM }
-PREDICT(Tp -> * F Tp)  = { * }
-PREDICT(Tp -> / F Tp)  = { / }
-PREDICT(Tp -> EPSILON) = { "EPSILON }
-PREDICT(F  -> ( E ))   = { ( }
-PREDICT(F  -> NUM)     = { NUM }
+GUIDA(S  -> E)      = {(, n)}
+GUIDA(E  -> T EP)   = {(, n)}
+GUIDA(EP -> + T EP) = {+}
+GUIDA(EP -> - T EP) = {-}
+GUIDA(EP -> ε)      = {), $}
+GUIDA(T  -> F TP)   = {(, n}
+GUIDA(TP -> * F TP) = {*}
+GUIDA(TP -> / F TP) = {/}
+GUIDA(TP -> ε)      = {+, -, ), $}
+GUIDA(F  -> ( E ))  = {(}
+GUIDA(F  -> n)      = {n}
