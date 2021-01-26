@@ -20,7 +20,6 @@ public class Lexer {
   public Token scan(BufferedReader br) {
     // Spaces, Tag.DIV Token and Comments (Single line or Multi line)
     while (Character.isWhitespace(peek) || peek == Tag.DIV) {
-      // TODO Single DFA?
       //  Tag.DIV Token and Comments (Single line or Multi line)
       if (peek == Tag.DIV) {
         readChar(br);
