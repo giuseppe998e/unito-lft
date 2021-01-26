@@ -19,10 +19,7 @@ public class Lexer {
 
   public Token scan(BufferedReader br) {
     // Spaces
-    while (Character.isWhitespace(peek)) {
-      if (peek == '\n') line += 1;
-      readChar(br);
-    }
+    while (Character.isWhitespace(peek)) readChar(br);
 
     // Single Char Tokens
     switch (peek) {
@@ -159,6 +156,7 @@ public class Lexer {
   private void readChar(BufferedReader br) {
     try {
       peek = (char) br.read();
+      if (peek == '\n') line += 1;
     } catch (IOException ignored) { 
       peek = (char) Tag.EOF;
     }

@@ -20,8 +20,6 @@ public class Lexer {
   public Token scan(BufferedReader br) {
     // Spaces, Tag.DIV Token and Comments (Single line or Multi line)
     while (Character.isWhitespace(peek) || peek == Tag.DIV) {
-      if (peek == '\n') line += 1;
-
       // TODO Single DFA?
       //  Tag.DIV Token and Comments (Single line or Multi line)
       if (peek == Tag.DIV) {
@@ -207,6 +205,7 @@ public class Lexer {
   private void readChar(BufferedReader br) {
     try {
       peek = (char) br.read();
+      if (peek == '\n') line += 1;
     } catch (IOException ignored) { 
       peek = (char) Tag.EOF;
     }
