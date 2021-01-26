@@ -18,13 +18,27 @@ public class Parser {
   }
 
   public void start() {
-    expr();
-    match(Tag.EOF);
+    switch (token.getTag()) {
+      case Tag.LPT:
+      case Tag.NUM:
+        expr();
+        match(Tag.EOF);
+        break;
+      default:
+        error("start() Erroneous char found: " + token);
+    }
   }
 
   private void expr() {
-    term();
-    exprp();
+    switch (token.getTag()) {
+      case Tag.LPT:
+      case Tag.NUM:
+        term();
+        exprp();
+        break;
+      default:
+        error("expr() Erroneous char found: " + token);
+    }
   }
 
   private void exprp() {
@@ -39,12 +53,24 @@ public class Parser {
         term();
         exprp();
         break;
+      case Tag.RPT:
+      case Tag.EOF:
+        break;
+      default:
+        error("exprp() Erroneous char found: " + token);
     }
   }
 
   private void term() {
-    fact();
-    termp();
+    switch (token.getTag()) {
+      case Tag.LPT:
+      case Tag.NUM:
+        fact();
+        termp();
+        break;
+      default:
+        error("term() Erroneous char found: " + token);
+    }
   }
 
   private void termp() {
@@ -59,6 +85,13 @@ public class Parser {
         fact();
         termp();
         break;
+      case Tag.ADD:
+      case Tag.SUB:
+      case Tag.RPT:
+      case Tag.EOF:
+        break;
+      default:
+        error("termp() Erroneous char found: " + token);
     }
   }
   
@@ -73,7 +106,7 @@ public class Parser {
         match(Tag.NUM);
         break;
       default:
-        error("fact() error");
+        error("fact() Erroneous char found: " + token);
     }
   }
 

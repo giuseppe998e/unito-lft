@@ -18,26 +18,48 @@ public class Parser {
   }
 
   public void prog() {
-    stat();
-    match(Tag.EOF);
+    switch (token.getTag()) {
+      case Tag.LPT:
+        stat();
+        match(Tag.EOF);
+        break;
+      default:
+        error("start() Erroneous char found: " + token);
+    }
   }
 
   private void statlist() {
-    stat();
-    statlistp();
+    switch (token.getTag()) {
+      case Tag.LPT:
+        stat();
+        statlistp();
+      default:
+        error("statlist() Erroneous char found: " + token);
+    }
   }
 
   private void statlistp() {
-    if (token.getTag() == Tag.LPT) {
-      stat();
-      statlistp();
-    } // else EPSILON
+    switch (token.getTag()) {
+      case Tag.LPT:
+        stat();
+        statlistp();
+      case Tag.RPT:
+        break;
+      default:
+        error("statlistp() Erroneous char found: " + token);
+    }
   }
 
   private void stat() {
-    match(Tag.LPT);
-    statp();
-    match(Tag.RPT);
+    switch (token.getTag()) {
+      case Tag.LPT:
+        match(Tag.LPT);
+        statp();
+        match(Tag.RPT);
+        break;
+      default:
+        error("stat() Erroneous char found: " + token);
+    }
   }
 
   private void statp() {
@@ -71,29 +93,47 @@ public class Parser {
         match(Tag.ID);
         break;
       default:
-        error("statp() error");
+        error("statp() Erroneous char found: " + token);
     }
   }
   
   private void elseopt() {
-    if (token.getTag() == Tag.LPT) {
-      match(Tag.LPT);
-      match(Tag.ELSE);
-      stat();
-      match(Tag.RPT);
-    } // else EPSILON
+    switch (token.getTag()) {
+      case Tag.LPT:
+        match(Tag.LPT);
+        match(Tag.ELSE);
+        stat();
+        match(Tag.RPT);
+        break;
+      case Tag.RPT:
+        break;
+      default:
+        error("elseopt() Erroneous char found: " + token);
+    }
   }
 
   private void bexpr() {
-    match(Tag.LPT);
-    bexprp();
-    match(Tag.RPT);
+    switch (token.getTag()) {
+      case Tag.LPT:
+        match(Tag.LPT);
+        bexprp();
+        match(Tag.RPT);
+        break;
+      default:
+        error("bexpr() Erroneous char found: " + token);
+    }
   }
 
   private void bexprp() {
-    match(Tag.RELOP);
-    expr();
-    expr();
+    switch (token.getTag()) {
+      case Tag.RELOP:
+        match(Tag.RELOP);
+        expr();
+        expr();
+        break;
+      default:
+        error("bexprp() Erroneous char found: " + token);
+    }
   }
 
   private void expr() {
@@ -110,7 +150,7 @@ public class Parser {
         match(Tag.RPT);
         break;
       default:
-        error("expr() error");
+        error("expr() Erroneous char found: " + token);
     }
   }
 
@@ -135,13 +175,21 @@ public class Parser {
         expr();
         break;
       default:
-        error("exprp() error");
+        error("exprp() Erroneous char found: " + token);
     }
   }
 
   private void exprlist() {
-    expr();
-    exprlistp();
+    switch (token.getTag()) {
+      case Tag.NUM:
+      case Tag.ID:
+      case Tag.LPT:
+        expr();
+        exprlistp();
+        break;
+      default:
+        error("exprlist() Erroneous char found: " + token);
+    }
   }
 
   private void exprlistp() {
@@ -151,10 +199,11 @@ public class Parser {
       case Tag.LPT:
         expr();
         exprlistp();
-    }
-
-    if (token.getTag() == Tag.LPT) {
-      match(Tag.RPT);
+        break;
+      case Tag.RPT:
+        break;
+      default:
+        error("exprlistp() Erroneous char found: " + token);
     }
   }
 
