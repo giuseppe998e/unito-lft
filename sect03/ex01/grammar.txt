@@ -11,11 +11,11 @@ F  -> ( E )
     | n
 
 FIRST(S)  = {(, n}
-FIRST(E)  = {(, n)}
+FIRST(E)  = {(, n}
 FIRST(EP) = {+, -, ε}
-FIRST(T)  = {(, n)}
+FIRST(T)  = {(, n}
 FIRST(TP) = {*, /, ε}
-FIRST(F)  = {(, n)}
+FIRST(F)  = {(, n}
 
 FOLLOW(S)  = {$}
 FOLLOW(E)  = {), $}
@@ -24,8 +24,8 @@ FOLLOW(T)  = {+, -, ), $}
 FOLLOW(TP) = {+, -, ), $}
 FOLLOW(F)  = {+, -, *, /, ), $}
 
-GUIDA(S  -> E)      = {(, n)}
-GUIDA(E  -> T EP)   = {(, n)}
+GUIDA(S  -> E)      = {(, n}
+GUIDA(E  -> T EP)   = {(, n}
 GUIDA(EP -> + T EP) = {+}
 GUIDA(EP -> - T EP) = {-}
 GUIDA(EP -> ε)      = {), $}
