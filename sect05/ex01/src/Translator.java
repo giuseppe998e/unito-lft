@@ -102,7 +102,7 @@ public class Translator {
                                               // While (TRUE) {... 
         bexpr(lwhileTrue, lnext);             // Check condition
         codeGen.emitLabel(lwhileTrue);        // If TRUE, "continue"
-        stat(lnext - 1);                      //<-/
+        stat(lnext);                          //<-/
         codeGen.emit(OpCode.GOto, lnext - 1); // ...} do  // Next Label - 1 == Actual label
         // (If FALSE, jump to "lnext")
         break;

@@ -100,8 +100,8 @@ public class Translator {
         match(Tag.WHILE);
 
         bexpr(lnext, false); 
-        stat(lnext - 1); // Next Label - 1 == Actual label
-        codeGen.emit(OpCode.GOto, lnext - 1);
+        stat(lnext);
+        codeGen.emit(OpCode.GOto, lnext - 1); // Next Label - 1 == Actual label
 
         break;
       case Tag.DO:
