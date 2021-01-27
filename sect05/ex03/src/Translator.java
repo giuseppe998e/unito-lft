@@ -156,21 +156,29 @@ public class Translator {
       case Tag.AND:
         match(Tag.AND);
 
-        bexpr(lfalse, reverse);
-        bexpr(lfalse, reverse);
+        if (reverse) { // Pseudo "De Morgan"
+          int lTrue = codeGen.newLabel();
+          bexpr(lTrue, !reverse);
+          bexpr(lfalse, reverse);
+          codeGen.emitLabel(lTrue);
+        } else {
+          bexpr(lfalse, reverse);
+          bexpr(lfalse, reverse);
+        }
 
         return;
       case Tag.OR:
         match(Tag.OR);
-        
-        int lbexprTrue = codeGen.newLabel(),
-            lbexprFalse = codeGen.newLabel();
-        
-        bexpr(lbexprFalse, reverse);
-        codeGen.emit(OpCode.GOto, lbexprTrue);
-        codeGen.emitLabel(lbexprFalse);
-        bexpr(lfalse, reverse);
-        codeGen.emitLabel(lbexprTrue);
+
+        if (reverse) { // Pseudo "De Morgan" 
+          bexpr(lfalse, reverse);
+          bexpr(lfalse, reverse);
+        } else {
+          int lTrue = codeGen.newLabel();
+          bexpr(lTrue, !reverse);
+          bexpr(lfalse, reverse);
+          codeGen.emitLabel(lTrue);
+        }
 
         return;
       case Tag.NOT:
