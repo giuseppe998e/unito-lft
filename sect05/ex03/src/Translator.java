@@ -89,7 +89,7 @@ public class Translator {
         match(Tag.COND);
 
         int lcondFalse = codeGen.newLabel();
-        bexpr(lcondFalse);
+        bexpr(lcondFalse, false);
         stat(lnext);
         codeGen.emit(OpCode.GOto, lnext);
         codeGen.emitLabel(lcondFalse);
@@ -101,7 +101,7 @@ public class Translator {
 
         int lwhileLoop = codeGen.newLabel();
         codeGen.emitLabel(lwhileLoop);
-        bexpr(lnext); 
+        bexpr(lnext, false); 
         stat(lwhileLoop);
         codeGen.emit(OpCode.GOto, lwhileLoop);
 
@@ -141,11 +141,11 @@ public class Translator {
     }
   }
 
-  private void bexpr(int lfalse) {
+  private void bexpr(int lfalse, boolean reverse) {
     switch (token.getTag()) {
       case Tag.LPT:
         match(Tag.LPT);
-        bexprp(lfalse);
+        bexprp(lfalse, reverse);
         match(Tag.RPT);
         break;
       default:
@@ -153,13 +153,13 @@ public class Translator {
     }
   }
 
-  private void bexprp(int lfalse) {
+  private void bexprp(int lfalse, boolean reverse) {
     switch (token.getTag()) {
       case Tag.AND:
         match(Tag.AND);
 
-        bexpr(lfalse);
-        bexpr(lfalse);
+        bexpr(lfalse, reverse);
+        bexpr(lfalse, reverse);
 
         return;
       case Tag.OR:
@@ -168,16 +168,18 @@ public class Translator {
         int lbexprTrue = codeGen.newLabel(),
             lbexprFalse = codeGen.newLabel();
         
-        bexpr(lbexprFalse);
+        bexpr(lbexprFalse, reverse);
         codeGen.emit(OpCode.GOto, lbexprTrue);
         codeGen.emitLabel(lbexprFalse);
-        bexpr(lfalse);
+        bexpr(lfalse, reverse);
         codeGen.emitLabel(lbexprTrue);
 
         return;
       case Tag.NOT:
         match(Tag.NOT);
-        // TODO Reverse the next code snippet
+        
+        bexpr(lfalse, !reverse);
+
         return;
     }
 
@@ -189,22 +191,28 @@ public class Translator {
 
       switch (type) {
         case "<":
-          codeGen.emit(OpCode.if_icmpge, lfalse); // >=
+          OpCode if_icmplt = reverse ? OpCode.if_icmplt : OpCode.if_icmpge;
+          codeGen.emit(if_icmplt, lfalse); // >=
           break;
         case ">":
-          codeGen.emit(OpCode.if_icmple, lfalse); // <=
+          OpCode if_icmpgt = reverse ? OpCode.if_icmpgt : OpCode.if_icmple;
+          codeGen.emit(if_icmpgt, lfalse); // <=
           break;
         case "<=":
-          codeGen.emit(OpCode.if_icmpgt, lfalse); // >
+          OpCode if_icmple = reverse ? OpCode.if_icmple : OpCode.if_icmpgt;
+          codeGen.emit(if_icmple, lfalse); // >
           break;
         case ">=":
-          codeGen.emit(OpCode.if_icmplt, lfalse); // <
+          OpCode if_icmpge = reverse ? OpCode.if_icmpge : OpCode.if_icmplt;
+          codeGen.emit(if_icmpge, lfalse); // <
           break;
         case "<>":
-          codeGen.emit(OpCode.if_icmpeq, lfalse); // ==
+          OpCode if_icmpne = reverse ? OpCode.if_icmpne : OpCode.if_icmpeq;
+          codeGen.emit(if_icmpne, lfalse); // ==
           break;
         case "==":
-          codeGen.emit(OpCode.if_icmpne, lfalse); // <>
+          OpCode if_icmpeq = reverse ? OpCode.if_icmpeq : OpCode.if_icmpne;
+          codeGen.emit(if_icmpeq, lfalse); // <>
           break;
         default:
           error("bexprp(type) Erroneous char found: " + token);
