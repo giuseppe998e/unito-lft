@@ -18,15 +18,28 @@ class Evaluator {
   }
 
   public int start() {
-    int exprVal = expr();
-    match(Tag.EOF);
-
-    return exprVal;
+    switch (token.getTag()) {
+      case Tag.LPT:
+      case Tag.NUM:
+        int exprVal = expr();
+        match(Tag.EOF);
+        return exprVal;
+      default:
+        error("start() Erroneous char found: " + token);
+        return -1;
+    }
   }
 
   private int expr() {
-    int termVal = term();
-    return exprp(termVal);
+    switch (token.getTag()) {
+      case Tag.LPT:
+      case Tag.NUM:
+        int termVal = term();
+        return exprp(termVal);
+      default:
+        error("expr() Erroneous char found: " + token);
+        return -1;
+    }
   }
 
   private int exprp(int inputVal) {
@@ -41,14 +54,25 @@ class Evaluator {
         match(Tag.SUB);
         termVal = term();
         return exprp(inputVal - termVal);
-      default:
+      case Tag.RPT:
+      case Tag.EOF:
         return inputVal;
+      default:
+        error("exprp() Erroneous char found: " + token);
+        return -1;
     }
   }
 
   private int term() {
-    int factVal = fact();
-    return termp(factVal);
+    switch (token.getTag()) {
+      case Tag.LPT:
+      case Tag.NUM:
+        int factVal = fact();
+        return termp(factVal);
+      default:
+        error("term() Erroneous char found: " + token);
+        return -1;
+    }
   }
 
   private int termp(int inputVal) {
@@ -63,8 +87,14 @@ class Evaluator {
         match(Tag.DIV);
         factVal = fact();
         return termp(inputVal / factVal);
-      default:
+      case Tag.ADD:
+      case Tag.SUB:
+      case Tag.RPT:
+      case Tag.EOF:
         return inputVal;
+      default:
+        error("termp() Erroneous char found: " + token);
+        return -1;
     }
   }
   
@@ -82,7 +112,7 @@ class Evaluator {
         match(Tag.NUM);
         break;
       default:
-        error("fact() error");
+        error("fact() Erroneous char found: " + token);
     }
 
     return returnVal;
