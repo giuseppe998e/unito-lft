@@ -24,7 +24,7 @@ public class Translator {
   }
 
   public void prog(String outDir) {
-        switch (token.getTag()) {
+    switch (token.getTag()) {
       case Tag.LPT:
         int lnextNew = codeGen.newLabel();
         stat(lnextNew);
