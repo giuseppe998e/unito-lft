@@ -98,13 +98,12 @@ public class Translator {
         break;
       case Tag.WHILE:
         match(Tag.WHILE);
-        int lwhileTrue = codeGen.newLabel(),
-            lwhileLoop = codeGen.newLabel();
-        codeGen.emitLabel(lwhileLoop);         // While (TRUE) {... 
-        bexpr(lwhileTrue, lnext);              // Check condition
-        codeGen.emitLabel(lwhileTrue);         // If TRUE, "continue"
-        stat(lwhileLoop);                      //<-/
-        codeGen.emit(OpCode.GOto, lwhileLoop); // ...} do
+        int lwhileTrue = codeGen.newLabel();
+                                              // While (TRUE) {... 
+        bexpr(lwhileTrue, lnext);             // Check condition
+        codeGen.emitLabel(lwhileTrue);        // If TRUE, "continue"
+        stat(lnext - 1);                      //<-/
+        codeGen.emit(OpCode.GOto, lnext - 1); // ...} do  // Next Label - 1 == Actual label
         // (If FALSE, jump to "lnext")
         break;
       case Tag.DO:

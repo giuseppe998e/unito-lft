@@ -99,11 +99,9 @@ public class Translator {
       case Tag.WHILE:
         match(Tag.WHILE);
 
-        int lwhileLoop = codeGen.newLabel();
-        codeGen.emitLabel(lwhileLoop);
         bexpr(lnext, false); 
-        stat(lwhileLoop);
-        codeGen.emit(OpCode.GOto, lwhileLoop);
+        stat(lnext - 1); // Next Label - 1 == Actual label
+        codeGen.emit(OpCode.GOto, lnext - 1);
 
         break;
       case Tag.DO:
