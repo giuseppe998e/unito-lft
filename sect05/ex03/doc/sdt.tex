@@ -25,12 +25,12 @@
 % --------------------------------------------------------------------------------------------------------------------%
   $\node{statp}$      & $::=$ & $\texttt{= ID}\; \node{expr} \cmd{emit(istore(id.addr))}$ \\
 
-                      &  $|$  & $\tag{cond} \cmd{bexpr.false = newlabel()} \node{bexpr}$ \\
+                      &  $|$  & $\tag{cond} \cmd{bexpr.false = newlabel()} \cmd{bexpr.reverse = false} \node{bexpr}$ \\
                       &       & $\cmd{stat.next = statp.next} \node{stat} \cmd{emit(goto(statp.next))}$ \\
                       &       & $\cmd{emitlabel(bexpr.false)} \cmd{elseopt.next = bexpr.false}$ \\
 
                       &  $|$  & $\tag{while} \cmd{stat.next = newlabel()} \cmd{emitlabel(stat.next)}$ \\
-                      &       & $\cmd{bexpr.false = statp.next} \node{bexpr} \node{stat} \cmd{emit(goto(stat.next))}$ \\
+                      &       & $\cmd{bexpr.false = statp.next} \cmd{bexpr.reverse = false} \node{bexpr} \node{stat} \cmd{emit(goto(stat.next))}$ \\
 
                       &  $|$  & $\tag{do} \cmd{statlist.next = statp.next} \node{statlist}$ \\
 
@@ -41,15 +41,15 @@
   $\node{elseopt}$    & $::=$ & $(\; \tag{else} \cmd{stat.next = elseopt.next} \node{stat})$ \\
                       &  $|$  & $\varepsilon$ \\\\
 % --------------------------------------------------------------------------------------------------------------------%
-  $\node{bexpr}$      & $::=$ & $(\; \cmd{bexprp.false = bexpr.false} \node{bexprp} )$ \\\\
+  $\node{bexpr}$      & $::=$ & $(\; \cmd{bexprp.false = bexpr.false} \cmd{bexprp.reverse = bexpr.reverse} \node{bexprp} )$ \\\\
 % --------------------------------------------------------------------------------------------------------------------%
-  $\node{bexprp}$     & $::=$ & $\tag{\&\&} \cmd{bexpr1.false = bexprp.false} \node{bexpr1}$ \\
-                      &       & $\cmd{bexpr2.false = bexprp.false} \node{bexpr2}$ \\
-                      &  $|$  & $\tag{||} \cmd{bexprp.true = newlabel()} \cmd{bexpr1.false = newlabel()} \node{bexpr1}$ \\
-                      &       & $\cmd{emit(goto(bexprp.true))} \cmd{emitlabel(bexpr1.false)}$ \\
-                      &       & $\cmd{bexpr2.false = bexprp.false} \node{bexpr2} \cmd{emitlabel(bexprp.true)}$ \\
-                      &  $|$  & $\;\tag{!}\; \cmd{bexpr.true = bexprp.false} \node{bexpr}$ TODO \\
-                      &  $|$  & $\tag{RELOP} \node{expr} \node{expr} \cmd{emit(if\_icmp(bexprp.false))}$ \\\\
+  $\node{bexprp}$     & $::=$ & $\tag{\&\&} \cmd{bexpr1.false = bexprp.false} \cmd{bexprp1.reverse = bexprp.reverse} \node{bexpr1}$ \\
+                      &       & $\cmd{bexpr2.false = bexprp.false} \cmd{bexprp2.reverse = bexprp.reverse} \node{bexpr2}$ \\
+                      &  $|$  & $\tag{||} \cmd{bexpr1.false = newlabel()} \cmd{bexpr1.reverse =\:!bexprp.reverse} \node{bexpr1}$ \\
+                      &       & $\cmd{bexpr2.false = bexprp.false} \cmd{bexpr2.reverse = bexprp.reverse} \node{bexpr2}$ \\
+                      &       & $\cmd{emitlabel(bexpr1.false)}$ \\
+                      &  $|$  & $\;\tag{!}\; \cmd{bexpr.false = bexprp.false} \cmd{bexpr.reverse =\:!bexprp.reverse} \node{bexpr}$ \\
+                      &  $|$  & $\tag{RELOP} \node{expr} \node{expr} \cmd{emit(if\_icmp(bexprp.false, bexprp.reverse))}$ \\\\
 % --------------------------------------------------------------------------------------------------------------------%
   $\node{expr}$       & $::=$ & $\tag{NUM} \cmd{emit(ldc(num.value))}$ \\
 
