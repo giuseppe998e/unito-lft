@@ -24,38 +24,57 @@ public class Translator {
   }
 
   public void prog(String outDir) {
-    int lnextNew = codeGen.newLabel();
-    stat(lnextNew);
-    codeGen.emitLabel(lnextNew);
-
-    match(Tag.EOF);
-    codeGen.toJasmin(outDir);
-  }
-
-  private void statlist(int lnext) {
-    int lnextNew = codeGen.newLabel();
-    stat(lnextNew);
-    codeGen.emitLabel(lnextNew);
-
-    statlistp(lnext);
-  }
-
-  private void statlistp(int lnext) {
-    if (token.getTag() == Tag.LPT) {
-      /*
+        switch (token.getTag()) {
+      case Tag.LPT:
         int lnextNew = codeGen.newLabel();
         stat(lnextNew);
         codeGen.emitLabel(lnextNew);
-    
+
+        match(Tag.EOF);
+        codeGen.toJasmin(outDir);
+        break;
+      default:
+        error("prog() Erroneous char found: " + token);
+    }
+  }
+
+  private void statlist(int lnext) {
+    switch (token.getTag()) {
+      case Tag.LPT:
+        int lnextNew = codeGen.newLabel();
+        stat(lnextNew);
+        codeGen.emitLabel(lnextNew);
         statlistp(lnext);
-      == */ statlist(lnext);
-    } // else EPSILON
+        break;
+      default:
+        error("statlist() Erroneous char found: " + token);
+    }
+  }
+
+  private void statlistp(int lnext) {
+    switch (token.getTag()) {
+      case Tag.LPT: // statlist(lnext)
+        int lnextNew = codeGen.newLabel();
+        stat(lnextNew);
+        codeGen.emitLabel(lnextNew);
+        statlistp(lnext);
+      case Tag.RPT:
+        break;
+      default:
+        error("statlistp() Erroneous char found: " + token);
+    }
   }
 
   private void stat(int lnext) {
-    match(Tag.LPT);
-    statp(lnext);
-    match(Tag.RPT);
+     switch (token.getTag()) {
+      case Tag.LPT:
+        match(Tag.LPT);
+        statp(lnext);
+        match(Tag.RPT);
+        break;
+      default:
+        error("stat() Erroneous char found: " + token);
+    }
   }
 
   private void statp(int lnext) {
@@ -104,23 +123,35 @@ public class Translator {
         codeGen.emit(OpCode.istore, idAddr2);
         break;
       default:
-        error("statp() error");
+        error("statp() Erroneous char found: " + token);
     }
   }
   
   private void elseopt(int lnext) {
-    if (token.getTag() == Tag.LPT) {
-      match(Tag.LPT);
-      match(Tag.ELSE);
-      stat(lnext);
-      match(Tag.RPT);
-    } // else EPSILON
+    switch (token.getTag()) {
+      case Tag.LPT:
+        match(Tag.LPT);
+        match(Tag.ELSE);
+        stat(lnext);
+        match(Tag.RPT);
+        break;
+      case Tag.RPT:
+        break;
+      default:
+        error("elseopt() Erroneous char found: " + token);
+    }
   }
 
   private void bexpr(int ltrue, int lfalse) {
-    match(Tag.LPT);
-    bexprp(ltrue, lfalse);
-    match(Tag.RPT);
+    switch (token.getTag()) {
+      case Tag.LPT:
+        match(Tag.LPT);
+        bexprp(ltrue, lfalse);
+        match(Tag.RPT);
+        break;
+      default:
+        error("bexpr() Erroneous char found: " + token);
+    }
   }
 
   private void bexprp(int ltrue, int lfalse) {
@@ -177,12 +208,12 @@ public class Translator {
           codeGen.emit(OpCode.if_icmpeq, ltrue);
           break;
         default:
-          error("bexprp(type) error");
+          error("bexprp(type) Erroneous char found: " + token);
       }
 
       codeGen.emit(OpCode.GOto, lfalse);
     } else {
-      error("bexprp() error");
+      error("bexprp() Erroneous char found: " + token);
     }
   }
 
@@ -202,7 +233,7 @@ public class Translator {
         match(Tag.RPT);
         break;
       default:
-        error("expr() error");
+        error("expr() Erroneous char found: " + token);
     }
   }
 
@@ -231,13 +262,21 @@ public class Translator {
         codeGen.emit(OpCode.idiv);
         break;
       default:
-        error("exprp() error");
+        error("exprp() Erroneous char found: " + token);
     }
   }
 
   private void exprlist() {
-    expr();
-    exprlistp();
+    switch (token.getTag()) {
+      case Tag.NUM:
+      case Tag.ID:
+      case Tag.LPT:
+        expr();
+        exprlistp();
+        break;
+      default:
+        error("exprlist() Erroneous char found: " + token);
+    }
   }
 
   private void exprlistp() {
@@ -245,13 +284,13 @@ public class Translator {
       case Tag.NUM:
       case Tag.ID:
       case Tag.LPT:
-        /*expr();
+        expr();
         exprlistp();
-        ==*/ exprlist();
-    }
-
-    if (token.getTag() == Tag.LPT) {
-      match(Tag.RPT);
+        break;
+      case Tag.RPT:
+        break;
+      default:
+        error("exprlistp() Erroneous char found: " + token);
     }
   }
 
