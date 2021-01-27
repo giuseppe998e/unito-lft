@@ -24,7 +24,7 @@ public class Parser {
         match(Tag.EOF);
         break;
       default:
-        error("start() Erroneous char found: " + token);
+        error("prog() Erroneous char found: " + token);
     }
   }
 
@@ -33,6 +33,7 @@ public class Parser {
       case Tag.LPT:
         stat();
         statlistp();
+        break;
       default:
         error("statlist() Erroneous char found: " + token);
     }
