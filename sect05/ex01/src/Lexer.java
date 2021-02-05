@@ -34,7 +34,7 @@ public class Lexer {
                 break;
               case 1:
                 if (peek == Tag.DIV) state = 2;
-                else state = 0;
+                else state = peek == Tag.MUL ? 1 : 0;
             }
           }
 

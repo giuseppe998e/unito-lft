@@ -34,7 +34,7 @@ public class Lexer {
                 break;
               case 1:
                 if (peek == Tag.DIV) state = 2;
-                else state = 0;
+                else state = peek == Tag.MUL ? 1 : 0;
             }
           }
 
@@ -205,7 +205,7 @@ public class Lexer {
     try {
       peek = (char) br.read();
       if (peek == '\n') line += 1;
-    } catch (IOException ignored) { 
+    } catch (IOException ignored) {
       peek = (char) Tag.EOF;
     }
   }

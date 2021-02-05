@@ -20,7 +20,6 @@ public class Lexer {
   public Token scan(BufferedReader br) {
     // Spaces, Tag.DIV Token and Comments (Single line or Multi line)
     while (Character.isWhitespace(peek) || peek == Tag.DIV) {
-      // TODO Single DFA?
       //  Tag.DIV Token and Comments (Single line or Multi line)
       if (peek == Tag.DIV) {
         readChar(br);
@@ -35,7 +34,7 @@ public class Lexer {
                 break;
               case 1:
                 if (peek == Tag.DIV) state = 2;
-                else state = 0;
+                else state = peek == Tag.MUL ? 1 : 0;
             }
           }
 

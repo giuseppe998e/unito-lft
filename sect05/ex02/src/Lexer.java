@@ -28,13 +28,14 @@ public class Lexer {
           int state = 0;
           while (state < 2 && peek != (char) Tag.EOF) {
             readChar(br);
+
             switch(state) {
               case 0:
                 if (peek == Tag.MUL) state = 1;
                 break;
               case 1:
                 if (peek == Tag.DIV) state = 2;
-                else state = 0;
+                else state = peek == Tag.MUL ? 1 : 0;
             }
           }
 
