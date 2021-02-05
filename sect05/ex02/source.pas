@@ -1,3 +1,4 @@
+/* commento **/
 (do
 
   (read x)

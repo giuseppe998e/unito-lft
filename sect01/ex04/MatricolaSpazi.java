@@ -8,7 +8,7 @@ public class MatricolaSpazi {
     System.out.print("Please enter a string: ");
     String inputStr = keyboard.nextLine();
     keyboard.close();
-    
+
     System.out.println("Is input correct? " + (scan(inputStr) ? "YES" : "NOPE"));
     System.out.println("");
   }
@@ -30,13 +30,13 @@ public class MatricolaSpazi {
           break;
         case 1: // Last odd digit
           if (Character.isWhitespace(ch)) state = 4;
-          else if (Character.isDigit(ch)) 
+          else if (Character.isDigit(ch))
             if (ch % 2 == 0) state = 2;
           else state = -1;
           break;
         case 2: // Last even digit
           if (Character.isWhitespace(ch)) state = 4;
-          else if (Character.isDigit(ch)) 
+          else if (Character.isDigit(ch))
             if (ch % 2 != 0) state = 1;
           else state = -1;
           break;

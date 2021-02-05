@@ -8,7 +8,7 @@ public class MatricolaContrario {
     System.out.print("Please enter a string: ");
     String inputStr = keyboard.nextLine();
     keyboard.close();
-    
+
     System.out.println("Is input correct? " + (scan(inputStr) ? "YES" : "NOPE"));
     System.out.println("");
   }
@@ -17,10 +17,10 @@ public class MatricolaContrario {
     int sLength = s.length();
     int state = 0;
     int i = 0;
- 
+
     while (state >= 0 && i < sLength) {
      final char ch = s.charAt(i++);
- 
+
       switch (state) {
         case 0:
           if (Character.isLetter(ch))
@@ -40,13 +40,13 @@ public class MatricolaContrario {
             else state = 6;
           else if (!Character.isLetter(ch)) state = -1;
           break;
-        case 3: 
-          if (Character.isDigit(ch)) 
+        case 3:
+          if (Character.isDigit(ch))
             if (intValue(ch) % 2 != 0) state = 4;
           else state = -1;
           break;
         case 4:
-          if (Character.isDigit(ch)) 
+          if (Character.isDigit(ch))
             if (intValue(ch) % 2 == 0) state = 6;
           else state = -1;
           break;
@@ -56,13 +56,13 @@ public class MatricolaContrario {
           else state = -1;
           break;
         case 6:
-          if (Character.isDigit(ch)) 
+          if (Character.isDigit(ch))
             if (intValue(ch) % 2 != 0) state = 4;
           else state = -1;
           break;
      }
     }
- 
+
     return state == 3 || state == 4;
    }
 

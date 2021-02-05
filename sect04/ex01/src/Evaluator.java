@@ -97,7 +97,7 @@ class Evaluator {
         return -1;
     }
   }
-  
+
   private int fact() {
     int returnVal = -1;
 
@@ -146,7 +146,7 @@ class Evaluator {
 
     try (FileReader fReader = new FileReader(args[0]);
           BufferedReader bReader = new BufferedReader(fReader)) {
-      
+
       Evaluator evaluator = new Evaluator(lexer, bReader);
       int evaluatorStart = evaluator.start();
 

@@ -98,10 +98,10 @@ public class Translator {
         break;
       case Tag.WHILE:
         match(Tag.WHILE);
-        
+
         int lwhileLoop = codeGen.newLabel();
         codeGen.emitLabel(lwhileLoop);
-        bexpr(lnext, false); 
+        bexpr(lnext, false);
         stat(lnext);
         codeGen.emit(OpCode.GOto, lwhileLoop); // Next Label - 1 == Actual label
 
@@ -125,7 +125,7 @@ public class Translator {
         error("statp() Erroneous char found: " + token);
     }
   }
-  
+
   private void elseopt(int lnext) {
     switch (token.getTag()) {
       case Tag.LPT:
@@ -172,7 +172,7 @@ public class Translator {
       case Tag.OR:
         match(Tag.OR);
 
-        if (reverse) { // Pseudo "De Morgan" 
+        if (reverse) { // Pseudo "De Morgan"
           bexpr(lfalse, reverse);
           bexpr(lfalse, reverse);
         } else {
@@ -185,7 +185,7 @@ public class Translator {
         return;
       case Tag.NOT:
         match(Tag.NOT);
-        
+
         bexpr(lfalse, !reverse);
 
         return;
@@ -355,7 +355,7 @@ public class Translator {
 
     try (FileReader fReader = new FileReader(args[0]);
           BufferedReader bReader = new BufferedReader(fReader)) {
-      
+
       Translator translator = new Translator(lexer, bReader);
 
       String outDir = (args.length > 1) ? args[1] + "/" : "";

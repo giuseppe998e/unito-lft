@@ -14,6 +14,6 @@ public class Word extends Token {
 
   public String toString() {
     String string = String.format("{tag: %3d, lexeme: '%s'}", tag, lexeme);
-    return string; 
+    return string;
   }
 }

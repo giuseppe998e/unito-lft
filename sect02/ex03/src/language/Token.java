@@ -23,7 +23,7 @@ public class Token {
 
   public String toString() {
     String string = String.format("{tag: %3d, char: '%c'}", tag, (char)tag);
-    return string; 
+    return string;
   }
 
   // -------------------------------------------------------

@@ -13,10 +13,10 @@
 \begin{center}
 \begin{tabular}{ r c l }
   $\node{prog}$       & $::=$ & $\cmd{stat.next = newlabel()} \node{stat} \cmd{emitlabel(stat.next)} \tag{EOF}$ \\\\
-  $\node{statlist}$   & $::=$ & $\cmd{stat.next = newlabel()} \node{stat} \cmd{emitlabel(stat.next)}$ \\ 
+  $\node{statlist}$   & $::=$ & $\cmd{stat.next = newlabel()} \node{stat} \cmd{emitlabel(stat.next)}$ \\
                       &       & $\cmd{statlistp.next = statlist.next}\node{statlistp}$ \\\\
 % --------------------------------------------------------------------------------------------------------------------%
-  $\node{statlistp}$  & $::=$ & $\cmd{stat.next = newlabel()} \node{stat} \cmd{emitlabel(stat.next)}$ \\ 
+  $\node{statlistp}$  & $::=$ & $\cmd{stat.next = newlabel()} \node{stat} \cmd{emitlabel(stat.next)}$ \\
                       &       & $\cmd{statlistp1.next = statlistp.next}\node{statlistp1}$ \\
 
                       &  $|$  & $\varepsilon$ \\\\
@@ -25,13 +25,13 @@
 % --------------------------------------------------------------------------------------------------------------------%
   $\node{statp}$      & $::=$ & $\texttt{= ID}\; \node{expr} \cmd{emit(istore(id.addr))}$ \\
 
-                      &  $|$  & $\tag{cond} \cmd{bexpr.true = newlabel()} \cmd{bexpr.false = newlabel()} \node{bexpr}$ \\ 
+                      &  $|$  & $\tag{cond} \cmd{bexpr.true = newlabel()} \cmd{bexpr.false = newlabel()} \node{bexpr}$ \\
                       &       & $\cmd{emitlabel(bexpr.true)} \cmd{stat.next = bexpr.true}$ \\
                       &       & $\node{stat} \cmd{emit(goto(statp.next))} \cmd{ emitlabel(bexpr.false)}$ \\
                       &       & $\cmd{elseopt.next = bexpr.false} \node{elseopt}$ \\
 
                       &  $|$  & $\tag{while} \cmd{bexpr.true = newlabel()} \cmd{bexpr.false = statp.next}$ \\
-                      &       & $\cmd{stat.next = newlabel()} \cmd{emitlabel(stat.next)} \node{bexpr}$ \\ 
+                      &       & $\cmd{stat.next = newlabel()} \cmd{emitlabel(stat.next)} \node{bexpr}$ \\
                       &       & $\cmd{emitlabel(bexpr.true)} \node{stat} \cmd{emit(goto(stat.next))}$ \\
 
                       &  $|$  & $\tag{do} \cmd{statlist.next = statp.next} \node{statlist}$ \\

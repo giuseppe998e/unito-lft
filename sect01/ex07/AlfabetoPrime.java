@@ -8,7 +8,7 @@ public class AlfabetoPrime {
     System.out.print("Please enter a string: ");
     String inputStr = keyboard.nextLine();
     keyboard.close();
-    
+
     System.out.println("Is input correct? " + (scan(inputStr) ? "YES" : "NOPE"));
     System.out.println("");
   }
@@ -17,7 +17,7 @@ public class AlfabetoPrime {
     int sLength = s.length();
     int state = 0;
     int i = 0;
- 
+
     while (state >= 0 && i < sLength) {
       final char ch = s.charAt(i++);
 

@@ -3,8 +3,8 @@ package language;
 public final class Number extends Token {
   private final int value;
 
-  public Number (int value) { 
-    super(Tag.NUM); 
+  public Number (int value) {
+    super(Tag.NUM);
     this.value = value;
   }
 
@@ -14,6 +14,6 @@ public final class Number extends Token {
 
   public String toString() {
     String string = String.format("{tag: %3d, value: %d}", tag, value);
-    return string; 
+    return string;
   }
 }

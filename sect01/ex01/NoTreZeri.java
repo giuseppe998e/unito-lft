@@ -7,11 +7,11 @@ public class NoTreZeri {
     System.out.print("Please enter a string: ");
     String inputStr = keyboard.nextLine();
     keyboard.close();
-    
+
     System.out.println("Is input correct? " + (scan(inputStr) ? "YES" : "NOPE"));
     System.out.println("");
   }
-  
+
   public static boolean scan(String s) {
     int sLength = s.length();
     int state = 0;

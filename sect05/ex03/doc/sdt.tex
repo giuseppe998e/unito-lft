@@ -13,10 +13,10 @@
 \begin{center}
 \begin{tabular}{ r c l }
   $\node{prog}$       & $::=$ & $\cmd{stat.next = newlabel()} \node{stat} \cmd{emitlabel(stat.next)} \tag{EOF}$ \\\\
-  $\node{statlist}$   & $::=$ & $\cmd{stat.next = newlabel()} \node{stat} \cmd{emitlabel(stat.next)}$ \\ 
+  $\node{statlist}$   & $::=$ & $\cmd{stat.next = newlabel()} \node{stat} \cmd{emitlabel(stat.next)}$ \\
                       &       & $\cmd{statlistp.next = statlist.next}\node{statlistp}$ \\\\
 % --------------------------------------------------------------------------------------------------------------------%
-  $\node{statlistp}$  & $::=$ & $\cmd{stat.next = newlabel()} \node{stat} \cmd{emitlabel(stat.next)}$ \\ 
+  $\node{statlistp}$  & $::=$ & $\cmd{stat.next = newlabel()} \node{stat} \cmd{emitlabel(stat.next)}$ \\
                       &       & $\cmd{statlistp1.next = statlistp.next}\node{statlistp1}$ \\
 
                       &  $|$  & $\varepsilon$ \\\\

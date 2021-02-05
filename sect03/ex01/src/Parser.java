@@ -94,7 +94,7 @@ public class Parser {
         error("termp() Erroneous char found: " + token);
     }
   }
-  
+
   private void fact() {
     switch (token.getTag()) {
       case Tag.LPT:
@@ -138,7 +138,7 @@ public class Parser {
 
     try (FileReader fReader = new FileReader(args[0]);
           BufferedReader bReader = new BufferedReader(fReader)) {
-     
+
       Parser parser = new Parser(lexer, bReader);
       parser.start();
 

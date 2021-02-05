@@ -23,7 +23,7 @@ public class Lexer {
       // Tag.DIV Token and Comments (Single line or Multi line)
       if (peek == Tag.DIV) {
         readChar(br);
-        
+
         if (peek == Tag.MUL) {
           int state = 0;
           while (state < 2 && peek != (char) Tag.EOF) {
@@ -206,7 +206,7 @@ public class Lexer {
     try {
       peek = (char) br.read();
       if (peek == '\n') line += 1;
-    } catch (IOException ignored) { 
+    } catch (IOException ignored) {
       peek = (char) Tag.EOF;
     }
   }
@@ -218,7 +218,7 @@ public class Lexer {
 
     try (FileReader fReader = new FileReader(args[0]);
           BufferedReader bReader = new BufferedReader(fReader)) {
-      
+
       Token token = null;
       do {
         token = lexer.scan(bReader);

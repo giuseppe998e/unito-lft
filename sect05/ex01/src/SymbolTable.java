@@ -18,7 +18,7 @@ public class SymbolTable {
     if (offsetMap.containsValue(_address)) {
       throw new IllegalArgumentException("Reference to a memory location already occupied by another variable");
     }
-    
+
     offsetMap.put(s, _address);
     return _address;
   }

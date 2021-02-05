@@ -100,7 +100,7 @@ public class Translator {
         match(Tag.WHILE);
         int lwhileTrue = codeGen.newLabel(),
             lwhileLoop = codeGen.newLabel();
-        codeGen.emitLabel(lwhileLoop);        // While (TRUE) {... 
+        codeGen.emitLabel(lwhileLoop);        // While (TRUE) {...
         bexpr(lwhileTrue, lnext);             // Check condition
         codeGen.emitLabel(lwhileTrue);        // If TRUE, "continue"
         stat(lnext);                          //<-/
@@ -126,7 +126,7 @@ public class Translator {
         error("statp() Erroneous char found: " + token);
     }
   }
-  
+
   private void elseopt(int lnext) {
     switch (token.getTag()) {
       case Tag.LPT:
@@ -342,7 +342,7 @@ public class Translator {
 
     try (FileReader fReader = new FileReader(args[0]);
           BufferedReader bReader = new BufferedReader(fReader)) {
-      
+
       Translator translator = new Translator(lexer, bReader);
 
       String outDir = (args.length > 1) ? args[1] + "/" : "";

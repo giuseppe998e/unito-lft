@@ -8,7 +8,7 @@ public class SerialNumber {
     System.out.print("Please enter a string: ");
     String inputStr = keyboard.nextLine();
     keyboard.close();
-    
+
     System.out.println("Is input correct? " + (scan(inputStr) ? "YES" : "NOPE"));
     System.out.println("");
   }
@@ -30,14 +30,14 @@ public class SerialNumber {
         case 1: // Last odd digit
           if (Character.isLetter(ch))
             state = (ch >= 'l' && ch <= 'z') ? 3 : -1; // L-Z
-          else if(Character.isDigit(ch)) 
+          else if(Character.isDigit(ch))
             if (intValue(ch) % 2 == 0) state = 2;
           else state = -1;
           break;
         case 2:  // Last even digit
           if (Character.isLetter(ch))
             state = (ch >= 'a' && ch <= 'k') ? 3 : -1; // A-K
-          else if(Character.isDigit(ch)) 
+          else if(Character.isDigit(ch))
             if(intValue(ch) % 2 != 0) state = 1;
           else state = -1;
           break;
@@ -49,7 +49,7 @@ public class SerialNumber {
 
     return state == 3;
   }
-  
+
   private static int intValue(char ch) {
     return Character.getNumericValue(ch);
   }

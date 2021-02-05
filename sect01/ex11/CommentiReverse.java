@@ -8,7 +8,7 @@ public class CommentiReverse {
     System.out.print("Please enter a string: ");
     String inputStr = keyboard.nextLine();
     keyboard.close();
-    
+
     System.out.println("Is input correct? " + (scan(inputStr) ? "YES" : "NOPE"));
     System.out.println("");
   }
@@ -17,7 +17,7 @@ public class CommentiReverse {
     int sLength = s.length();
     int state = 0;
     int i = 0;
- 
+
     while (state >= 0 && i < sLength) {
       final char ch = s.charAt(i++);
 
@@ -26,12 +26,12 @@ public class CommentiReverse {
           if (ch == '/') state = 1;
           else if (ch != '*' && ch != 'a') state = -1;
           break;
-        case 1: 
+        case 1:
           if (ch == '*') state = 2;
           else if (ch == 'a') state = 0;
           else if (ch != '/') state = -1;
           break;
-        case 2: 
+        case 2:
           if (ch == '*') state = 3;
           else if (!(ch == '/' || ch == 'a')) state = -1;
           break;
@@ -43,6 +43,6 @@ public class CommentiReverse {
       }
     }
 
-    return state == 0 || state == 1;  
+    return state == 0 || state == 1;
   }
 }
