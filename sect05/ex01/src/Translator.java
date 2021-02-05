@@ -91,10 +91,10 @@ public class Translator {
             lcondFalse = codeGen.newLabel();
         bexpr(lcondTrue, lcondFalse);     // Check condition
         codeGen.emitLabel(lcondTrue);     // If TRUE, "continue"...
-        stat(lcondTrue);                  // <-/
+        stat(lnext);                      // <-/
         codeGen.emit(OpCode.GOto, lnext); // ...and jump to the next statement
         codeGen.emitLabel(lcondFalse);    // If FALSE, jump
-        elseopt(lcondFalse);              // <-/
+        elseopt(lnext);                   // <-/
         break;
       case Tag.WHILE:
         match(Tag.WHILE);
@@ -196,7 +196,10 @@ public class Translator {
         codeGen.emit(OpCode.ldc, numVal);
         break;
       case Tag.ID:
-        int idAddr = matchID();
+        String identifier = token.getLexeme();
+        int idAddr = symTable.lookupAddress(identifier);
+        if (idAddr == -1) error("expr() Identifier not found: " + identifier);
+        match(Tag.ID);
         codeGen.emit(OpCode.iload, idAddr);
         break;
       case Tag.LPT:

@@ -91,19 +91,20 @@ public class Translator {
             lcondFalse = codeGen.newLabel();
         bexpr(lcondTrue, lcondFalse);     // Check condition
         codeGen.emitLabel(lcondTrue);     // If TRUE, "continue"...
-        stat(lcondTrue);                  // <-/
+        stat(lnext);                      // <-/
         codeGen.emit(OpCode.GOto, lnext); // ...and jump to the next statement
         codeGen.emitLabel(lcondFalse);    // If FALSE, jump
-        elseopt(lcondFalse);              // <-/
+        elseopt(lnext);                   // <-/
         break;
       case Tag.WHILE:
         match(Tag.WHILE);
-        int lwhileTrue = codeGen.newLabel();
-                                              // While (TRUE) {... 
+        int lwhileTrue = codeGen.newLabel(),
+            lwhileLoop = codeGen.newLabel();
+        codeGen.emitLabel(lwhileLoop);        // While (TRUE) {... 
         bexpr(lwhileTrue, lnext);             // Check condition
         codeGen.emitLabel(lwhileTrue);        // If TRUE, "continue"
         stat(lnext);                          //<-/
-        codeGen.emit(OpCode.GOto, lnext - 1); // ...} do  // Next Label - 1 == Actual label
+        codeGen.emit(OpCode.GOto, lwhileLoop); // ...} do  // Next Label - 1 == Actual label
         // (If FALSE, jump to "lnext")
         break;
       case Tag.DO:
@@ -223,7 +224,10 @@ public class Translator {
         codeGen.emit(OpCode.ldc, numVal);
         break;
       case Tag.ID:
-        int idAddr = matchID();
+        String identifier = token.getLexeme();
+        int idAddr = symTable.lookupAddress(identifier);
+        if (idAddr == -1) error("expr() Identifier not found: " + identifier);
+        match(Tag.ID);
         codeGen.emit(OpCode.iload, idAddr);
         break;
       case Tag.LPT:
